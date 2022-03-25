@@ -1,2 +1,19 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿
+namespace DevinBank.App
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+
+            ConsolePatterns run = new ConsolePatterns();
+
+            //run.Logo();
+            run.MainMenu();
+
+
+        }
+    }
+
+}
+

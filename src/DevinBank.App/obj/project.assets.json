@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    "net6.0": {}
+    "net6.0": {
+      "DevinBank.Library/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/DevinBank.Library.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/DevinBank.Library.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "DevinBank.Library/1.0.0": {
+      "type": "project",
+      "path": "../DevinBank.Classes/DevinBank.Library.csproj",
+      "msbuildProject": "../DevinBank.Classes/DevinBank.Library.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net6.0": []
+    "net6.0": [
+      "DevinBank.Library >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\deywi\\.nuget\\packages\\": {}
@@ -33,7 +52,11 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\deywi\\OneDrive\\Documentos\\Devinhouse\\modulo2\\projeto\\DevinBank\\src\\DevinBank.Classes\\DevinBank.Library.csproj": {
+              "projectPath": "C:\\Users\\deywi\\OneDrive\\Documentos\\Devinhouse\\modulo2\\projeto\\DevinBank\\src\\DevinBank.Classes\\DevinBank.Library.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
