@@ -9,7 +9,6 @@ namespace DevinBank.Library
     public class Banco : IBanco
     {
         public DateTime DataAtual { get; private set; } = DateTime.Now;
-
         public IList<Conta> Contas { get; private set; } = new List<Conta>();
 
         public void SalvarConta(Conta conta)

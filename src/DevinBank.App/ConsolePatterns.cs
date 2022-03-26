@@ -262,13 +262,14 @@ namespace DevinBank.App
         private void FluxoTransferencia()
         {
             Console.Clear();
-            Console.WriteLine("Quanto quer sacar?");
+            Console.WriteLine("Quanto quer transferir?");
             decimal montante = decimal.Parse(Console.ReadLine());
             Console.Clear();
             Console.WriteLine("Para qual conta deseja transferir?");
             int numConta = int.Parse(Console.ReadLine());
 
             Conta.Transferencia(Banco.AcessarConta(numConta), montante);
+
         }
         private void FluxoExtrato()
         {
@@ -336,15 +337,17 @@ namespace DevinBank.App
                     case "1":
                         Console.Clear();
                         Console.WriteLine("[1] Simular rendimentos");
-
+                        Console.ReadKey(true);
                         break;
                     case "2":
                         Console.Clear();
-                        Console.WriteLine("[2] Extrato de transações");
+                        Console.WriteLine(Conta.ExtratoTransacoes());
+                        Console.ReadKey(true);
                         break;
                     case "3":
                         Console.Clear();
-                        Console.WriteLine("[3] Historico de transferências");
+                        Console.WriteLine(Conta.HistoricoTransferencias());
+                        Console.ReadKey(true);
                         break;
                     case "4":
                         Console.Clear();
@@ -373,11 +376,13 @@ namespace DevinBank.App
                 {
                     case "1":
                         Console.Clear();
-                        Console.WriteLine("[1] Extrato de transações");
+                        Console.WriteLine(Conta.ExtratoTransacoes());
+                        Console.ReadKey(true);
                         break;
                     case "2":
                         Console.Clear();
-                        Console.WriteLine("[2] Historico de transferências");
+                        Console.WriteLine(Conta.HistoricoTransferencias());
+                        Console.ReadKey(true);
                         break;
                     case "3":
                         Console.Clear();
@@ -417,11 +422,13 @@ namespace DevinBank.App
                         break;
                     case "3":
                         Console.Clear();
-                        Console.WriteLine("[3] Extrato de transações");
+                        Console.WriteLine(Conta.ExtratoTransacoes());
+                        Console.ReadKey(true);
                         break;
                     case "4":
                         Console.Clear();
-                        Console.WriteLine("[4] Historico de transferências");
+                        Console.WriteLine(Conta.HistoricoTransferencias());
+                        Console.ReadKey(true);
                         break;
                     case "5":
                         Console.Clear();

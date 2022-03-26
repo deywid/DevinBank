@@ -11,6 +11,6 @@ namespace DevinBank.Library
             ChequeEspecial = rendaMensal * 10 / 100;
         }
 
-        public override void ExtratoTransacoes() { }
+        
     }
 }

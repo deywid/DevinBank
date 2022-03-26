@@ -9,6 +9,9 @@ namespace DevinBank.Library
         {
         }
 
-        public override void ExtratoTransacoes() { }
+        //public override string ExtratoTransacoes()
+        //{
+        //    return "";
+        //}
     }
 }

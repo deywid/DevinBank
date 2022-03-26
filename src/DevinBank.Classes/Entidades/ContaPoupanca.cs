@@ -10,6 +10,6 @@ namespace DevinBank.Library
         }
 
         public void SimulaRendimento(DateTime meses, decimal rentabilidade = 7) { }
-        public override void ExtratoTransacoes() { }
+        
     }
 }

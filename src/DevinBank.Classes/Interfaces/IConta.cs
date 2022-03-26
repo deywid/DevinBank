@@ -10,6 +10,8 @@ namespace DevinBank.Library
         int NumConta { get; }
         decimal RendaMensal { get; }
         decimal Saldo { get; }
+        public IList<Transacao> Transacoes { get; }
+        public IList<Transferencia> Transferencias { get; }
 
         void Deposito(decimal montante);
         void Saque(decimal montante);
@@ -18,6 +20,8 @@ namespace DevinBank.Library
         void AlterarCadastro(string nome);
         void AlterarCadastro(decimal rendaMensal);
         void AlterarCadastro(AgenciaEnum agencia);
-        void ExtratoTransacoes() { }
+        string ExtratoTransacoes();
+        void SalvarTransferencia(IConta contaDestino, decimal valor, DateTime data);
+        string HistoricoTransferencias();
     }
 }
