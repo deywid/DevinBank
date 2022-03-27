@@ -9,6 +9,11 @@ namespace DevinBank.Library
         {
         }
 
+        public void SimularRendimento(decimal saldo, DateTime data, int meses, int rentabilidade)
+        {
+            throw new NotImplementedException();
+        }
+
         //public override string ExtratoTransacoes()
         //{
         //    return "";

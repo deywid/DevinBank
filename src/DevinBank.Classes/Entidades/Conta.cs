@@ -1,11 +1,10 @@
-﻿using System.Threading;
-using DevinBank.Library.Enums;
+﻿using DevinBank.Library.Enums;
 
 namespace DevinBank.Library
 {
     public abstract class Conta : IConta
     {
-        private static int _cont;
+        private readonly int _cont = 1000;
         public string Nome { get; private set; }
         public string CPF { get; private set; }
         public decimal RendaMensal { get; private set; }
@@ -27,31 +26,28 @@ namespace DevinBank.Library
             Transferencias = new List<Transferencia>();
         }
 
-        public void Saque(decimal montante)
+        public void Saque(decimal montante, DateTime data)
         {
             Saldo -= montante;
 
-            DateTime date = DateTime.Now;
             TipoTransacao tipo = new(TipoTransacaoEnum.Saque);
-            SalvarTransacao(tipo, montante, date);
+            SalvarTransacao(tipo, montante, data);
         }
-        public void Deposito(decimal montante)
+        public void Deposito(decimal montante, DateTime data)
         {
             Saldo += montante;
 
-            DateTime date = DateTime.Now;
             TipoTransacao tipo = new(TipoTransacaoEnum.Deposito);
-            SalvarTransacao(tipo, montante, date);
+            SalvarTransacao(tipo, montante, data);
         }
-        public void Transferencia(Conta contaBeneficiaria, decimal montante)
+        public void Transferencia(Conta contaBeneficiaria, decimal montante, DateTime data)
         {
             Saldo -= montante;
             contaBeneficiaria.Saldo += montante;
 
             TipoTransacao tipo = new(TipoTransacaoEnum.Transferencia);
-            DateTime date = DateTime.Now;
-            SalvarTransacao(tipo, montante, date);
-            SalvarTransferencia(contaBeneficiaria, montante, date);
+            SalvarTransacao(tipo, montante, data);
+            SalvarTransferencia(contaBeneficiaria, montante, data);
         }
         public string Extrato()
         {
@@ -86,8 +82,6 @@ namespace DevinBank.Library
         {
             Transacoes.Add(new Transacao(tipo, valor, data));
         }
-
-
         public virtual string ExtratoTransacoes()
         {
             string extrato = "Extrato das transações:\n";
@@ -98,6 +92,7 @@ namespace DevinBank.Library
             return extrato;
 
         }
+       
 
     }
 

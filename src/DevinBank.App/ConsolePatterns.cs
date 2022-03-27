@@ -13,9 +13,9 @@ namespace DevinBank.App
         {
             Console.Clear();
             bool sair = false;
-
             do
             {
+                Console.WriteLine($"Hora: {Banco.DataAtual()}");
                 Console.WriteLine("Selecione a opção desejada:");
                 Console.WriteLine("[1] Acessar conta");
                 Console.WriteLine("[2] Criar nova conta");
@@ -113,9 +113,6 @@ namespace DevinBank.App
             Console.WriteLine($"Bem vindo, {Conta.Nome}");
 
             bool sair = false;
-            decimal montante;
-            int numConta;
-
             do
             {
                 Console.WriteLine("O que deseja fazer? ");
@@ -249,7 +246,7 @@ namespace DevinBank.App
             Console.WriteLine("Quanto quer sacar?");
             decimal montante = decimal.Parse(Console.ReadLine());
 
-            Conta.Saque(montante);
+            Conta.Saque(montante, Banco.DataAtual());
         }
         private void FluxoDeposito()
         {
@@ -257,7 +254,7 @@ namespace DevinBank.App
             Console.WriteLine("Quanto quer depositar?");
             decimal montante = decimal.Parse(Console.ReadLine());
 
-            Conta.Deposito(montante);
+            Conta.Deposito(montante, Banco.DataAtual());
         }
         private void FluxoTransferencia()
         {
@@ -268,7 +265,7 @@ namespace DevinBank.App
             Console.WriteLine("Para qual conta deseja transferir?");
             int numConta = int.Parse(Console.ReadLine());
 
-            Conta.Transferencia(Banco.AcessarConta(numConta), montante);
+            Conta.Transferencia(Banco.AcessarConta(numConta), montante, Banco.DataAtual());
 
         }
         private void FluxoExtrato()
@@ -299,6 +296,21 @@ namespace DevinBank.App
                 AgenciaEnum agencia = MenuEscolhaAgencia();
                 Conta.AlterarCadastro(agencia);
             }
+        }
+
+        private void FluxoSimularRendimentoPoupanca()
+        {
+            Console.Clear();
+            Console.WriteLine("Informe a quantidade de tempo(em meses): ");
+            int tempo = int.Parse(Console.ReadLine());
+            Console.WriteLine("Informe a rentabilidade anual: ");
+            int rentab = int.Parse(Console.ReadLine());
+
+            if(Conta is ContaPoupanca conta)
+            {
+                conta.SimularRendimento(Conta.Saldo, Banco.DataAtual(), tempo, rentab);
+            }
+            Console.ReadKey(true);
         }
         #endregion
        
@@ -335,9 +347,7 @@ namespace DevinBank.App
                 switch (opcao)
                 {
                     case "1":
-                        Console.Clear();
-                        Console.WriteLine("[1] Simular rendimentos");
-                        Console.ReadKey(true);
+                        FluxoSimularRendimentoPoupanca();
                         break;
                     case "2":
                         Console.Clear();
@@ -351,7 +361,6 @@ namespace DevinBank.App
                         break;
                     case "4":
                         Console.Clear();
-                        Console.WriteLine("[4] Voltar");
                         sair = true;
                         break;
                     default:

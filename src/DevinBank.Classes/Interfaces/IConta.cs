@@ -13,9 +13,9 @@ namespace DevinBank.Library
         public IList<Transacao> Transacoes { get; }
         public IList<Transferencia> Transferencias { get; }
 
-        void Deposito(decimal montante);
-        void Saque(decimal montante);
-        void Transferencia(Conta contaBeneficiaria, decimal montante);
+        void Deposito(decimal montante, DateTime data);
+        void Saque(decimal montante, DateTime data);
+        void Transferencia(Conta contaBeneficiaria, decimal montante, DateTime data);
         string Extrato();
         void AlterarCadastro(string nome);
         void AlterarCadastro(decimal rendaMensal);
@@ -23,5 +23,7 @@ namespace DevinBank.Library
         string ExtratoTransacoes();
         void SalvarTransferencia(IConta contaDestino, decimal valor, DateTime data);
         string HistoricoTransferencias();
+
+      //  abstract void SimularRendimento(decimal saldo, DateTime data, int meses, int rentabilidade = 7);
     }
 }

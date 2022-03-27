@@ -11,7 +11,6 @@ namespace DevinBank.Library
             IdTransacao = idTransacao;
             Nome = PegaNomeTransacao(idTransacao);
         }
-
         private static string PegaNomeTransacao(TipoTransacaoEnum idTransacao)
         {
             if(idTransacao == TipoTransacaoEnum.Saque)

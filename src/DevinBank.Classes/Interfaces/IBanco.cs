@@ -4,10 +4,10 @@ namespace DevinBank.Library
     public interface IBanco
     {
         IList<Conta> Contas { get; }
-        DateTime DataAtual { get; }
 
+        public DateTime DataAtual();
         void SalvarConta(Conta conta);
-        IConta AcessarConta(string cpf, int numConta);
+        Conta AcessarConta(string cpf, int numConta);
         Conta AcessarConta(int numConta);
     }
 }
