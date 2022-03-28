@@ -15,11 +15,10 @@ namespace DevinBank.App
             bool sair = false;
             do
             {
-                Console.WriteLine($"Hora: {Banco.DataAtual()}");
-                Console.WriteLine("Selecione a opção desejada:");
-                Console.WriteLine("[1] Acessar conta");
-                Console.WriteLine("[2] Criar nova conta");
-                Console.WriteLine("[3] Fechar App");
+                Console.WriteLine("Selecione a opção desejada: \n");
+                Console.WriteLine("[1] Acessar conta ");
+                Console.WriteLine("[2] Criar nova conta ");
+                Console.WriteLine("[3] Encerrar aplicação ");
                 string? opcao = Console.ReadLine();
 
                 switch (opcao)
@@ -32,12 +31,11 @@ namespace DevinBank.App
                         break;
                     case "3":
                         Console.Clear();
-                        Console.WriteLine("selecionou sair");
                         sair = true;
                         break;
                     default:
                         Console.Clear();
-                        Console.WriteLine("opção invalida");
+                        Console.WriteLine("Opção inválida");
                         break;
                 }
             } while (!sair);
@@ -49,7 +47,7 @@ namespace DevinBank.App
 
             do
             {
-                Console.WriteLine("Qual o tipo de conta deseja criar?");
+                Console.WriteLine("Qual o tipo de conta deseja criar? \n");
                 Console.WriteLine("[1] Criar conta corrente");
                 Console.WriteLine("[2] Criar conta poupança");
                 Console.WriteLine("[3] Criar conta de investidor");
@@ -70,12 +68,11 @@ namespace DevinBank.App
                         break;
                     case "4":
                         Console.Clear();
-                        Console.WriteLine("selecionou voltar");
                         sair = true;
                         break;
                     default:
                         Console.Clear();
-                        Console.WriteLine("opção invalida");
+                        Console.WriteLine("Opção inválida");
                         break;
                 }
             } while (!sair);
@@ -86,7 +83,7 @@ namespace DevinBank.App
 
             do
             {
-                Console.WriteLine("Escolha sua agencia: ");
+                Console.WriteLine("Escolha sua agência: \n");
                 Console.WriteLine("[1] 001 - Florianópolis ");
                 Console.WriteLine("[2] 002 - São José ");
                 Console.WriteLine("[3] 003 - Biguaçu ");
@@ -110,17 +107,15 @@ namespace DevinBank.App
         private void MenuConta()
         {
             Console.Clear();
-            Console.WriteLine($"Bem vindo, {Conta.Nome}");
-
             bool sair = false;
             do
             {
-                Console.WriteLine("O que deseja fazer? ");
+                Console.WriteLine("O que deseja fazer? \n");
                 Console.WriteLine("[1] Depósito");
                 Console.WriteLine("[2] Saque");
                 Console.WriteLine("[3] Transferência");
                 Console.WriteLine("[4] Extrato");
-                Console.WriteLine("[5] Editar meu cadastro");
+                Console.WriteLine("[5] Editar cadastro");
                 Console.WriteLine("[6] Mais opções...");
                 Console.WriteLine("[7] Sair");
                 string? opcao = Console.ReadLine();
@@ -143,16 +138,15 @@ namespace DevinBank.App
                         MenuAlterarCadastro();
                         break;
                     case "6":
-                        MenuContaEspecial();
+                        FluxoMenuConta();
                         break;
                     case "7":
                         Console.Clear();
-                        Console.WriteLine("[6] saindo...");
                         sair = true;
                         break;
                     default:
                         Console.Clear();
-                        Console.WriteLine("opção invalida");
+                        Console.WriteLine("Opção inválida");
                         break;
                 }
             } while (!sair);
@@ -163,7 +157,7 @@ namespace DevinBank.App
             bool sair = false;
             do
             {
-                Console.WriteLine("O que deseja editar no seu cadastro?");
+                Console.WriteLine("O que deseja editar no seu cadastro? \n");
                 Console.WriteLine("[1] Meu nome");
                 Console.WriteLine("[2] Minha renda mensal");
                 Console.WriteLine("[3] Minha agência");
@@ -188,7 +182,7 @@ namespace DevinBank.App
                         break;
                     default:
                         Console.Clear();
-                        Console.WriteLine("opção invalida");
+                        Console.WriteLine("Opção inválida");
                         break;
                 }
             } while (!sair);
@@ -308,17 +302,43 @@ namespace DevinBank.App
 
             if(Conta is ContaPoupanca conta)
             {
-                conta.SimularRendimento(Conta.Saldo, Banco.DataAtual(), tempo, rentab);
+                conta.SimularRendimento(Conta.Saldo, tempo, rentab);
             }
             Console.ReadKey(true);
+        }
+        private void FluxoInvestimento(bool simular)
+        {
+            Console.Clear();
+            var tipoInvest = MenuEscolhaInvestimento();
+            Console.WriteLine("Qual valor deseja aplicar? ");
+            decimal montante = decimal.Parse(Console.ReadLine());
+            Console.WriteLine("Informe a quantidade de tempo(em meses): ");
+            int tempo = int.Parse(Console.ReadLine());
+
+            if (simular)
+            {
+                if (Conta is ContaInvestimento conta)
+                {
+                    var rendimentos = conta.SimularRendimento(montante, tempo, new TipoInvestimento(tipoInvest));
+                    Console.WriteLine($"Rendimentos: R$ {rendimentos}");
+                }
+                Console.ReadKey(true);
+            }
+            else
+            {
+                if (Conta is ContaInvestimento conta)
+                    conta.Investimento(montante, tempo, Banco.DataAtual(), new TipoInvestimento(tipoInvest));
+            }
+            Console.ReadKey(true);
+
         }
         #endregion
        
         #region Menus especiais de MenuConta
-        private void MenuContaEspecial()
+        private void FluxoMenuConta()
         {
             Console.Clear();
-            Console.WriteLine("O que deseja fazer? ");
+            Console.WriteLine("O que deseja fazer? \n");
             if (Conta is ContaPoupanca)
             {
                 MenuContaPoupanca();
@@ -365,7 +385,7 @@ namespace DevinBank.App
                         break;
                     default:
                         Console.Clear();
-                        Console.WriteLine("opção invalida");
+                        Console.WriteLine("Opção inválida");
                         break;
                 }
             } while (!sair);
@@ -395,12 +415,11 @@ namespace DevinBank.App
                         break;
                     case "3":
                         Console.Clear();
-                        Console.WriteLine("[3] Voltar");
                         sair = true;
                         break;
                     default:
                         Console.Clear();
-                        Console.WriteLine("opção invalida");
+                        Console.WriteLine("Opção inválida");
                         break;
                 }
             } while (!sair);
@@ -411,7 +430,7 @@ namespace DevinBank.App
             do
             {
                 Console.WriteLine("[1] Investir");
-                Console.WriteLine("[2] Simular rendimentos");
+                Console.WriteLine("[2] Simular investimentos");
                 Console.WriteLine("[3] Extrato de transações");
                 Console.WriteLine("[4] Historico de transferências");
                 Console.WriteLine("[5] Voltar");
@@ -421,13 +440,10 @@ namespace DevinBank.App
                 switch (opcao)
                 {
                     case "1":
-                        Console.Clear();
-                        Console.WriteLine("[1] Investir");
-
+                        FluxoInvestimento(false);
                         break;
                     case "2":
-                        Console.Clear();
-                        Console.WriteLine("[2] Simular rendimentos");
+                        FluxoInvestimento(true);
                         break;
                     case "3":
                         Console.Clear();
@@ -441,15 +457,40 @@ namespace DevinBank.App
                         break;
                     case "5":
                         Console.Clear();
-                        Console.WriteLine("[5] Voltar");
                         sair = true;
                         break;
                     default:
                         Console.Clear();
-                        Console.WriteLine("opção invalida");
+                        Console.WriteLine("Opção inválida");
                         break;
                 }
             } while (!sair);
+        }
+        private static TipoInvestimentoEnum MenuEscolhaInvestimento()
+        {
+            Console.Clear();
+            do
+            {
+                Console.WriteLine("Escolha o tipo de investimento: ");
+                Console.WriteLine("[1] LCI: 8% a.a (resgate em 6 meses) ");
+                Console.WriteLine("[2] LCA: 9% a.a (resgate em 12 meses) ");
+                Console.WriteLine("[3] CDB: 10% a.a (resgate em 36 meses) ");
+                string? opcao = Console.ReadLine();
+
+                switch (opcao)
+                {
+                    case "1":
+                        return TipoInvestimentoEnum.LCI;
+                    case "2":
+                        return TipoInvestimentoEnum.LCA;
+                    case "3":
+                        return TipoInvestimentoEnum.CDB;
+                    default:
+                        Console.Clear();
+                        Console.WriteLine("Opção inválida");
+                        break;
+                }
+            } while (true);
         }
         #endregion
 

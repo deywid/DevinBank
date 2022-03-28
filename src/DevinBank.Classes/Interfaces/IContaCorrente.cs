@@ -2,6 +2,6 @@
 {
     public interface IContaCorrente : IConta
     {
-        decimal ChequeEspecial { get; }
+        decimal LimiteChequeEspecial { get; }
     }
 }

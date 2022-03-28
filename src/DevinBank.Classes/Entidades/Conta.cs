@@ -4,13 +4,13 @@ namespace DevinBank.Library
 {
     public abstract class Conta : IConta
     {
-        private readonly int _cont = 1000;
+        private static int _cont = 1000;
         public string Nome { get; private set; }
         public string CPF { get; private set; }
         public decimal RendaMensal { get; private set; }
         public int NumConta { get; private set; }
         public AgenciaEnum Agencia { get; private set; }
-        public decimal Saldo { get; private set; }
+        public decimal Saldo { get; set; }
         public IList<Transacao> Transacoes { get; private set; }
         public IList<Transferencia> Transferencias { get; private set; }
 
@@ -26,7 +26,7 @@ namespace DevinBank.Library
             Transferencias = new List<Transferencia>();
         }
 
-        public void Saque(decimal montante, DateTime data)
+        public virtual void Saque(decimal montante, DateTime data)
         {
             Saldo -= montante;
 
@@ -40,7 +40,7 @@ namespace DevinBank.Library
             TipoTransacao tipo = new(TipoTransacaoEnum.Deposito);
             SalvarTransacao(tipo, montante, data);
         }
-        public void Transferencia(Conta contaBeneficiaria, decimal montante, DateTime data)
+        public virtual void Transferencia(Conta contaBeneficiaria, decimal montante, DateTime data)
         {
             Saldo -= montante;
             contaBeneficiaria.Saldo += montante;
@@ -49,7 +49,7 @@ namespace DevinBank.Library
             SalvarTransacao(tipo, montante, data);
             SalvarTransferencia(contaBeneficiaria, montante, data);
         }
-        public string Extrato()
+        public virtual string Extrato()
         {
             return $"\nCliente: {Nome}\nCPF: {CPF}\nConta: {NumConta}\nAgencia: {Agencia}\n\nSaldo em conta: {Saldo}";
         }

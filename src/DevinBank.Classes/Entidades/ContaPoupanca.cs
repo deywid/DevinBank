@@ -9,23 +9,14 @@ namespace DevinBank.Library
         {
         }
 
-        public void SimularRendimento(decimal saldo, DateTime data, int meses, int rentabilidade)
+        public void SimularRendimento(decimal saldo, int meses, int rentabilidade)
         {
-            //int dias = (data.AddMonths(meses) - data).Days;
             decimal rendimentos;
+            
+            decimal txMensal = ((decimal)Math.Pow(1 + ((double)rentabilidade/100), 1.0 / 12) - 1) * 100m;
+            rendimentos = saldo * (txMensal * meses/100);
 
-            if (meses < 12)
-            {
-                decimal txMensal = ((decimal)Math.Pow(1 + ((double)rentabilidade/100), 1.0 / 12) - 1) * 100m;
-                rendimentos = saldo * (txMensal * meses/100);
-
-            }
-            else
-            {
-                decimal txAno = ((decimal)Math.Pow(1 + (double)(rentabilidade / 100m), ((double)meses)/12) - 1) * 100m;
-                rendimentos = saldo * txAno/100;
-            }
-
+            //int dias = (data.AddMonths(meses) - data).Days;
             //decimal txDiaria = ((decimal)Math.Pow(1 + (double)(rentabilidade / 100m), (1 / (double)ano)) - 1) * 100m;
             
             saldo += rendimentos;
