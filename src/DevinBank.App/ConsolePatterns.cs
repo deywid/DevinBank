@@ -18,7 +18,8 @@ namespace DevinBank.App
                 Console.WriteLine("Selecione a opção desejada: \n");
                 Console.WriteLine("[1] Acessar conta ");
                 Console.WriteLine("[2] Criar nova conta ");
-                Console.WriteLine("[3] Encerrar aplicação ");
+                Console.WriteLine("[3] Acessar área restrita ");
+                Console.WriteLine("[4] Encerrar aplicação ");
                 string? opcao = Console.ReadLine();
 
                 switch (opcao)
@@ -30,6 +31,9 @@ namespace DevinBank.App
                         MenuCriarConta();
                         break;
                     case "3":
+                        MenuAreaRestrita();
+                        break;
+                    case "4":
                         Console.Clear();
                         sair = true;
                         break;
@@ -67,6 +71,49 @@ namespace DevinBank.App
                         FluxoCriarConta("investidor");
                         break;
                     case "4":
+                        Console.Clear();
+                        sair = true;
+                        break;
+                    default:
+                        Console.Clear();
+                        Console.WriteLine("Opção inválida");
+                        break;
+                }
+            } while (!sair);
+        }
+        private void MenuAreaRestrita()
+        {
+            Console.Clear();
+            bool sair = false;
+            do
+            {
+                Console.WriteLine("Selecione a opção desejada: \n");
+                Console.WriteLine("[1] Listar todas as contas ");
+                Console.WriteLine("[2] Listar contas com saldo negativo ");
+                Console.WriteLine("[3] Valor total de investimentos ");
+                Console.WriteLine("[4] Extrato de transações de cliente ");
+                Console.WriteLine("[5] Mudar data do sistema ");
+                Console.WriteLine("[6] Voltar ");
+                string? opcao = Console.ReadLine();
+
+                switch (opcao)
+                {
+                    case "1":
+                        FluxoListarContas();
+                        break;
+                    case "2":
+                        FluxoListarContasSaldoNegativo();
+                        break;
+                    case "3":
+                        FluxoTotalEmInvestimentos();
+                        break;
+                    case "4":
+                        FluxoExtratoTransacoesCliente();
+                        break;
+                    case "5":
+                        FluxoMudarData();
+                        break;
+                    case "6":
                         Console.Clear();
                         sair = true;
                         break;
@@ -231,6 +278,58 @@ namespace DevinBank.App
 
             MenuConta();
         }
+        private void FluxoListarContas()
+        {
+            Console.Clear();
+            foreach(var conta in Banco.Contas)
+            {
+                Console.WriteLine("* *** *** *** *** *** *");
+                Console.WriteLine(conta.Extrato());
+            }
+            Console.ReadKey(true);
+        }
+        private void FluxoListarContasSaldoNegativo()
+        {
+            Console.Clear();
+            IEnumerable<Conta> query = Banco.Contas.Where(conta => conta.Saldo < 0);
+
+            foreach (var conta in query)
+            {
+                Console.WriteLine("* *** *** *** *** *** *");
+                Console.WriteLine(conta.Extrato());
+            }
+            Console.ReadKey(true);
+        }
+        private void FluxoTotalEmInvestimentos()
+        {
+            Console.WriteLine("Resultado total em investimentos: \n");
+            Console.WriteLine($"Valor: R${Banco.TotalEmInvestimentos():N2}");
+        }
+        private void FluxoExtratoTransacoesCliente()
+        {
+            Console.Clear();
+            Console.WriteLine("Informe o número da conta do cliente: ");
+            int numConta = int.Parse(Console.ReadLine());
+
+            var conta = Banco.AcessarConta(numConta);
+            Console.Clear();
+            Console.WriteLine(conta.ExtratoTransacoes());
+            Console.ReadKey(true);
+            Console.Clear();
+        }
+        private void FluxoMudarData()
+        {
+            Console.Clear();
+            Console.WriteLine("Informe primeiro o dia (dd): ");
+            int dia = int.Parse(Console.ReadLine());
+            Console.WriteLine("Agora o Mês (mm): ");
+            int mes = int.Parse(Console.ReadLine());
+            Console.WriteLine("Por ultimo, informe o Ano (yyyy): ");
+            int ano = int.Parse(Console.ReadLine());
+
+            Banco.AtualizaData(new DateTime(ano, mes, dia));
+            Banco.AtualizaContas();
+        }
         #endregion
 
         #region Fluxos de MenuConta
@@ -240,7 +339,7 @@ namespace DevinBank.App
             Console.WriteLine("Quanto quer sacar?");
             decimal montante = decimal.Parse(Console.ReadLine());
 
-            Conta.Saque(montante, Banco.DataAtual());
+            Conta.Saque(montante, Banco.Data);
         }
         private void FluxoDeposito()
         {
@@ -248,7 +347,7 @@ namespace DevinBank.App
             Console.WriteLine("Quanto quer depositar?");
             decimal montante = decimal.Parse(Console.ReadLine());
 
-            Conta.Deposito(montante, Banco.DataAtual());
+            Conta.Deposito(montante, Banco.Data);
         }
         private void FluxoTransferencia()
         {
@@ -259,7 +358,7 @@ namespace DevinBank.App
             Console.WriteLine("Para qual conta deseja transferir?");
             int numConta = int.Parse(Console.ReadLine());
 
-            Conta.Transferencia(Banco.AcessarConta(numConta), montante, Banco.DataAtual());
+            Conta.Transferencia(Banco.AcessarConta(numConta), montante, Banco.Data);
 
         }
         private void FluxoExtrato()
@@ -327,7 +426,7 @@ namespace DevinBank.App
             else
             {
                 if (Conta is ContaInvestimento conta)
-                    conta.Investimento(montante, tempo, Banco.DataAtual(), new TipoInvestimento(tipoInvest));
+                    conta.Investimento(montante, tempo, Banco.Data, new TipoInvestimento(tipoInvest));
             }
             Console.ReadKey(true);
 

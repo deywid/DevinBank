@@ -17,7 +17,6 @@ namespace DevinBank.Library
             {
                 Saldo -= montante;
                 ValorAplicado += montante;
-
                 TipoTransacao tipo = new(TipoTransacaoEnum.Investimento);
                 SalvarTransacao(tipo, montante, data, meses, tipoInvestimento);
 
@@ -51,7 +50,8 @@ namespace DevinBank.Library
             {
                 if(transacoes is TransacaoInvestimento tri)
                 {
-                    extrato += $"\nTransação: {tri.TipoTransacao.Nome}\nTipo Investimento: {tri.TipoInvestimento.Nome}\nValor: {tri.Valor}\nData: {tri.Data}\nResgate a partir de: {tri.DataRetirada}\nFim do investimento em: {tri.DataFinalInvestimento}\n";
+                    extrato += $"\nTransação: {tri.TipoTransacao.Nome}\nTipo Investimento: {tri.TipoInvestimento.Nome}" +
+                        $"\nValor investido: {tri.Valor:N2}\nValor liquido: {tri.ValorLiquido:N2}\nData do investimento: {tri.Data}\nResgate a partir de: {tri.DataRetirada}\nData fim: {tri.DataFinalInvestimento}\n";
                 }
                 else
                 {
@@ -60,5 +60,32 @@ namespace DevinBank.Library
             }
             return extrato;
         }
+
+        public void AtualizaValorAplicado(DateTime data)
+        {
+            decimal aux_soma = 0.0m;
+            IEnumerable<Transacao> query = Transacoes.Where(tr => tr is TransacaoInvestimento);
+
+            foreach(TransacaoInvestimento tr in query)
+            {
+                int dias = (data - tr.Data).Days;
+                if (dias == 0)
+                {
+                    tr.ValorLiquido = tr.Valor;
+                    aux_soma += tr.Valor;
+                }
+                else
+                {
+                    decimal txDiaria = ((decimal)Math.Pow(1 + (double)(tr.TipoInvestimento.Rentabilidade / 100), (1.0 / 365)) - 1) * 100m;
+
+                    tr.ValorLiquido = tr.Valor * (txDiaria * dias / 100) + tr.Valor;
+                    aux_soma += tr.ValorLiquido;
+                }
+            }
+
+            ValorAplicado = aux_soma;
+        }
+
+
     }
 }

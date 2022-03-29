@@ -4,6 +4,7 @@ namespace DevinBank.Library
     public class TransacaoInvestimento : Transacao
     {
         public TipoInvestimento TipoInvestimento { get; private set; }
+        public decimal ValorLiquido { get; set; }
         public DateTime DataRetirada { get; private set; }
         public DateTime DataFinalInvestimento { get; set; }
         public TransacaoInvestimento(TipoTransacao tipo, decimal valor, DateTime data, int meses, TipoInvestimento tipoInvestimento)
@@ -13,6 +14,7 @@ namespace DevinBank.Library
             DataRetirada = Data.AddMonths(TipoInvestimento.TempoResgate);
             DataFinalInvestimento = Data.AddMonths(meses);
         }
+
 
     }
 }
