@@ -24,6 +24,5 @@ namespace DevinBank.Library
         void SalvarTransferencia(IConta contaDestino, decimal valor, DateTime data);
         string HistoricoTransferencias();
 
-      //  abstract void SimularRendimento(decimal saldo, DateTime data, int meses, int rentabilidade = 7);
     }
 }

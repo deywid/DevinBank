@@ -3,10 +3,10 @@ namespace DevinBank.Library
 {
     public class Transferencia
     {
-        public IConta ContaOrigem { get; set; }
-        public IConta ContaDestino { get; set; }
-        public decimal Valor { get; set; }
-        public DateTime Data { get; set; }
+        public IConta ContaOrigem { get; }
+        public IConta ContaDestino { get; }
+        public decimal Valor { get; }
+        public DateTime Data { get; }
         public Transferencia(IConta contaOrigem, IConta contaDestino, decimal valor, DateTime data)
         {
             ContaOrigem = contaOrigem;
@@ -14,5 +14,6 @@ namespace DevinBank.Library
             Valor = valor;
             Data = data;
         }
+
     }
 }

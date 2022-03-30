@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Validacao
+namespace DevinBank.Library.Utils
 {	
 	// <summary >
 	// método de validação de CPF extraído de https://www.macoratti.net/11/09/c_val1.htm

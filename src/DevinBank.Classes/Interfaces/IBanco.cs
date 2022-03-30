@@ -4,7 +4,7 @@ namespace DevinBank.Library
     public interface IBanco
     {
         IList<Conta> Contas { get; }
-        DateTime Data { get; set; }
+        DateTime Data { get; }
 
         DateTime AtualizaData(DateTime data);
         void AtualizaContas();

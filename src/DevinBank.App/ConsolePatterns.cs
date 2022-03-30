@@ -1,5 +1,6 @@
 ﻿using DevinBank.Library;
 using DevinBank.Library.Enums;
+using DevinBank.Library.Utils;
 
 namespace DevinBank.App
 {
@@ -8,13 +9,13 @@ namespace DevinBank.App
         private IBanco Banco { get; set; } = new Banco();
         private IConta? Conta { get; set; } 
 
-        #region Menus tipicos
+        #region Menus -ok
         public void MainMenu()
         {
-            Console.Clear();
             bool sair = false;
             do
             {
+                Console.Clear();
                 Console.WriteLine("Selecione a opção desejada: \n");
                 Console.WriteLine("[1] Acessar conta ");
                 Console.WriteLine("[2] Criar nova conta ");
@@ -33,29 +34,26 @@ namespace DevinBank.App
                     case "3":
                         MenuAreaRestrita();
                         break;
-                    case "4":
-                        Console.Clear();
+                    case "4":                        
                         sair = true;
                         break;
                     default:
-                        Console.Clear();
                         Console.WriteLine("Opção inválida");
                         break;
                 }
             } while (!sair);
-        }
+        } //ok
         private void MenuCriarConta()
         {
-            Console.Clear();
             bool sair = false;
-
             do
             {
+                Console.Clear();
                 Console.WriteLine("Qual o tipo de conta deseja criar? \n");
                 Console.WriteLine("[1] Criar conta corrente");
                 Console.WriteLine("[2] Criar conta poupança");
                 Console.WriteLine("[3] Criar conta de investidor");
-                Console.WriteLine("[4] Voltar ao menu inicial");
+                Console.WriteLine("[4] Voltar ");
                 string? opcao = Console.ReadLine();
 
                 switch (opcao)
@@ -71,22 +69,20 @@ namespace DevinBank.App
                         FluxoCriarConta("investidor");
                         break;
                     case "4":
-                        Console.Clear();
                         sair = true;
                         break;
                     default:
-                        Console.Clear();
                         Console.WriteLine("Opção inválida");
                         break;
                 }
             } while (!sair);
-        }
+        } //ok
         private void MenuAreaRestrita()
         {
-            Console.Clear();
             bool sair = false;
             do
             {
+                Console.Clear();
                 Console.WriteLine("Selecione a opção desejada: \n");
                 Console.WriteLine("[1] Listar todas as contas ");
                 Console.WriteLine("[2] Listar contas com saldo negativo ");
@@ -114,49 +110,20 @@ namespace DevinBank.App
                         FluxoMudarData();
                         break;
                     case "6":
-                        Console.Clear();
                         sair = true;
                         break;
                     default:
-                        Console.Clear();
                         Console.WriteLine("Opção inválida");
                         break;
                 }
             } while (!sair);
-        }
-        private static AgenciaEnum MenuEscolhaAgencia()
-        {
-            Console.Clear();
-
-            do
-            {
-                Console.WriteLine("Escolha sua agência: \n");
-                Console.WriteLine("[1] 001 - Florianópolis ");
-                Console.WriteLine("[2] 002 - São José ");
-                Console.WriteLine("[3] 003 - Biguaçu ");
-                string? opcao = Console.ReadLine();
-
-                switch (opcao)
-                {
-                    case "1":
-                        return AgenciaEnum.Fpolis;
-                    case "2":
-                        return AgenciaEnum.SaoJose;
-                    case "3":
-                        return AgenciaEnum.Biguacu;
-                    default:
-                        Console.Clear();
-                        Console.WriteLine("Opção inválida");
-                        break;
-                }
-            } while (true);
-        }
+        } //ok
         private void MenuConta()
         {
-            Console.Clear();
             bool sair = false;
             do
             {
+                Console.Clear();
                 Console.WriteLine("O que deseja fazer? \n");
                 Console.WriteLine("[1] Depósito");
                 Console.WriteLine("[2] Saque");
@@ -185,31 +152,28 @@ namespace DevinBank.App
                         MenuAlterarCadastro();
                         break;
                     case "6":
-                        FluxoMenuConta();
+                        FluxoMaisOpcoes();
                         break;
                     case "7":
-                        Console.Clear();
                         sair = true;
                         break;
                     default:
-                        Console.Clear();
                         Console.WriteLine("Opção inválida");
                         break;
                 }
             } while (!sair);
-        }
+        } //ok
         private void MenuAlterarCadastro()
         {
-            Console.Clear();
             bool sair = false;
             do
             {
+                Console.Clear();
                 Console.WriteLine("O que deseja editar no seu cadastro? \n");
                 Console.WriteLine("[1] Meu nome");
                 Console.WriteLine("[2] Minha renda mensal");
                 Console.WriteLine("[3] Minha agência");
                 Console.WriteLine("[4] Voltar");
-
                 string? opcao = Console.ReadLine();
 
                 switch (opcao)
@@ -224,243 +188,24 @@ namespace DevinBank.App
                         FluxoEditarCadastro("agencia");
                         break;
                     case "4":
-                        Console.Clear();
                         sair = true;
                         break;
                     default:
-                        Console.Clear();
                         Console.WriteLine("Opção inválida");
                         break;
                 }
             } while (!sair);
-        }
-        #endregion
-
-        #region Fluxos tipicos
-        private void FluxoCriarConta(string tipoConta)
-        {
-            Console.Clear();
-
-            Console.WriteLine("Informe seu nome: ");
-            string nome = Console.ReadLine();
-            Console.Clear();
-            Console.WriteLine("Informe seu CPF: ");
-            string cpf = Console.ReadLine();
-            Console.Clear();
-            Console.WriteLine("Informe sua renda mensal: ");
-            decimal renda = decimal.Parse(Console.ReadLine());
-            AgenciaEnum agencia = MenuEscolhaAgencia();
-            Console.Clear();
-
-            if (tipoConta == "poupança")
-            {
-                Banco.SalvarConta(new ContaPoupanca(nome, cpf, renda, agencia));
-            } 
-            else if(tipoConta == "corrente")
-            {
-                Banco.SalvarConta(new ContaCorrente(nome, cpf, renda, agencia));
-            }
-            else
-            {
-                Banco.SalvarConta(new ContaInvestimento(nome, cpf, renda, agencia));
-            }
-        }
-        private void FluxoAcessarConta()
-        {
-            Console.Clear();
-            Console.WriteLine("Informe seu CPF: ");
-            string cpf = Console.ReadLine();
-            Console.Clear();
-            Console.WriteLine("Informe o número da conta: ");
-            int numConta = int.Parse(Console.ReadLine());
-            
-            Conta = Banco.AcessarConta(cpf, numConta);
-
-            MenuConta();
-        }
-        private void FluxoListarContas()
-        {
-            Console.Clear();
-            foreach(var conta in Banco.Contas)
-            {
-                Console.WriteLine("* *** *** *** *** *** *");
-                Console.WriteLine(conta.Extrato());
-            }
-            Console.ReadKey(true);
-        }
-        private void FluxoListarContasSaldoNegativo()
-        {
-            Console.Clear();
-            IEnumerable<Conta> query = Banco.Contas.Where(conta => conta.Saldo < 0);
-
-            foreach (var conta in query)
-            {
-                Console.WriteLine("* *** *** *** *** *** *");
-                Console.WriteLine(conta.Extrato());
-            }
-            Console.ReadKey(true);
-        }
-        private void FluxoTotalEmInvestimentos()
-        {
-            Console.WriteLine("Resultado total em investimentos: \n");
-            Console.WriteLine($"Valor: R${Banco.TotalEmInvestimentos():N2}");
-        }
-        private void FluxoExtratoTransacoesCliente()
-        {
-            Console.Clear();
-            Console.WriteLine("Informe o número da conta do cliente: ");
-            int numConta = int.Parse(Console.ReadLine());
-
-            var conta = Banco.AcessarConta(numConta);
-            Console.Clear();
-            Console.WriteLine(conta.ExtratoTransacoes());
-            Console.ReadKey(true);
-            Console.Clear();
-        }
-        private void FluxoMudarData()
-        {
-            Console.Clear();
-            Console.WriteLine("Informe primeiro o dia (dd): ");
-            int dia = int.Parse(Console.ReadLine());
-            Console.WriteLine("Agora o Mês (mm): ");
-            int mes = int.Parse(Console.ReadLine());
-            Console.WriteLine("Por ultimo, informe o Ano (yyyy): ");
-            int ano = int.Parse(Console.ReadLine());
-
-            Banco.AtualizaData(new DateTime(ano, mes, dia));
-            Banco.AtualizaContas();
-        }
-        #endregion
-
-        #region Fluxos de MenuConta
-        private void FluxoSaque()
-        {
-            Console.Clear();
-            Console.WriteLine("Quanto quer sacar?");
-            decimal montante = decimal.Parse(Console.ReadLine());
-
-            Conta.Saque(montante, Banco.Data);
-        }
-        private void FluxoDeposito()
-        {
-            Console.Clear();
-            Console.WriteLine("Quanto quer depositar?");
-            decimal montante = decimal.Parse(Console.ReadLine());
-
-            Conta.Deposito(montante, Banco.Data);
-        }
-        private void FluxoTransferencia()
-        {
-            Console.Clear();
-            Console.WriteLine("Quanto quer transferir?");
-            decimal montante = decimal.Parse(Console.ReadLine());
-            Console.Clear();
-            Console.WriteLine("Para qual conta deseja transferir?");
-            int numConta = int.Parse(Console.ReadLine());
-
-            Conta.Transferencia(Banco.AcessarConta(numConta), montante, Banco.Data);
-
-        }
-        private void FluxoExtrato()
-        {
-            Console.Clear();
-            Console.WriteLine("Seu extrato: \n");
-
-            Console.WriteLine(Conta.Extrato());
-            Console.ReadKey(true);
-        }
-        private void FluxoEditarCadastro(string opcao)
-        {
-            Console.Clear();
-            if(opcao == "nome")
-            {
-                Console.WriteLine("Digite o novo nome: ");
-                string nome = Console.ReadLine();
-                Conta.AlterarCadastro(nome);
-            }
-            else if(opcao == "renda")
-            {
-                Console.WriteLine("Informe sua nova renda: ");
-                decimal renda = decimal.Parse(Console.ReadLine());
-                Conta.AlterarCadastro(renda);
-            }
-            else
-            {
-                AgenciaEnum agencia = MenuEscolhaAgencia();
-                Conta.AlterarCadastro(agencia);
-            }
-        }
-
-        private void FluxoSimularRendimentoPoupanca()
-        {
-            Console.Clear();
-            Console.WriteLine("Informe a quantidade de tempo(em meses): ");
-            int tempo = int.Parse(Console.ReadLine());
-            Console.WriteLine("Informe a rentabilidade anual: ");
-            int rentab = int.Parse(Console.ReadLine());
-
-            if(Conta is ContaPoupanca conta)
-            {
-                conta.SimularRendimento(Conta.Saldo, tempo, rentab);
-            }
-            Console.ReadKey(true);
-        }
-        private void FluxoInvestimento(bool simular)
-        {
-            Console.Clear();
-            var tipoInvest = MenuEscolhaInvestimento();
-            Console.WriteLine("Qual valor deseja aplicar? ");
-            decimal montante = decimal.Parse(Console.ReadLine());
-            Console.WriteLine("Informe a quantidade de tempo(em meses): ");
-            int tempo = int.Parse(Console.ReadLine());
-
-            if (simular)
-            {
-                if (Conta is ContaInvestimento conta)
-                {
-                    var rendimentos = conta.SimularRendimento(montante, tempo, new TipoInvestimento(tipoInvest));
-                    Console.WriteLine($"Rendimentos: R$ {rendimentos}");
-                }
-                Console.ReadKey(true);
-            }
-            else
-            {
-                if (Conta is ContaInvestimento conta)
-                    conta.Investimento(montante, tempo, Banco.Data, new TipoInvestimento(tipoInvest));
-            }
-            Console.ReadKey(true);
-
-        }
-        #endregion
-       
-        #region Menus especiais de MenuConta
-        private void FluxoMenuConta()
-        {
-            Console.Clear();
-            Console.WriteLine("O que deseja fazer? \n");
-            if (Conta is ContaPoupanca)
-            {
-                MenuContaPoupanca();
-            }
-            else if(Conta is ContaCorrente)
-            {
-                MenuContaCorrente();
-            }
-            else
-            {
-                MenuContaInvest();
-            } 
-        }
+        } //ok
         private void MenuContaPoupanca()
         {
             bool sair = false;
             do
             {
+                Console.Clear();
                 Console.WriteLine("[1] Simular rendimentos");
                 Console.WriteLine("[2] Extrato de transações");
                 Console.WriteLine("[3] Historico de transferências");
                 Console.WriteLine("[4] Voltar");
-
                 string? opcao = Console.ReadLine();
 
                 switch (opcao)
@@ -469,107 +214,118 @@ namespace DevinBank.App
                         FluxoSimularRendimentoPoupanca();
                         break;
                     case "2":
-                        Console.Clear();
-                        Console.WriteLine(Conta.ExtratoTransacoes());
-                        Console.ReadKey(true);
+                        FluxoExtratoTransacoes();
                         break;
                     case "3":
-                        Console.Clear();
-                        Console.WriteLine(Conta.HistoricoTransferencias());
-                        Console.ReadKey(true);
+                        FluxoHistoricoTransferencias();
                         break;
                     case "4":
-                        Console.Clear();
                         sair = true;
                         break;
                     default:
-                        Console.Clear();
                         Console.WriteLine("Opção inválida");
                         break;
                 }
             } while (!sair);
-        }
+        } //ok
         private void MenuContaCorrente()
         {
             bool sair = false;
             do
             {
+                Console.Clear();
                 Console.WriteLine("[1] Extrato de transações");
                 Console.WriteLine("[2] Historico de transferências");
                 Console.WriteLine("[3] Voltar");
-
                 string? opcao = Console.ReadLine();
 
                 switch (opcao)
                 {
                     case "1":
-                        Console.Clear();
-                        Console.WriteLine(Conta.ExtratoTransacoes());
-                        Console.ReadKey(true);
+                        FluxoExtratoTransacoes();
                         break;
                     case "2":
-                        Console.Clear();
-                        Console.WriteLine(Conta.HistoricoTransferencias());
-                        Console.ReadKey(true);
+                        FluxoHistoricoTransferencias();
                         break;
                     case "3":
-                        Console.Clear();
                         sair = true;
                         break;
                     default:
-                        Console.Clear();
                         Console.WriteLine("Opção inválida");
                         break;
                 }
             } while (!sair);
-        }
-        private void MenuContaInvest()
+        } //ok
+        private void MenuContaInvest() //ok
         {
             bool sair = false;
             do
             {
+                Console.Clear();
                 Console.WriteLine("[1] Investir");
                 Console.WriteLine("[2] Simular investimentos");
                 Console.WriteLine("[3] Extrato de transações");
                 Console.WriteLine("[4] Historico de transferências");
                 Console.WriteLine("[5] Voltar");
-
                 string? opcao = Console.ReadLine();
 
                 switch (opcao)
                 {
                     case "1":
-                        FluxoInvestimento(false);
+                        FluxoInvestir();
                         break;
                     case "2":
-                        FluxoInvestimento(true);
+                        FluxoSimularInvestimento();
                         break;
                     case "3":
-                        Console.Clear();
-                        Console.WriteLine(Conta.ExtratoTransacoes());
-                        Console.ReadKey(true);
+                        FluxoExtratoTransacoes();
                         break;
                     case "4":
-                        Console.Clear();
-                        Console.WriteLine(Conta.HistoricoTransferencias());
-                        Console.ReadKey(true);
+                        FluxoHistoricoTransferencias();
                         break;
                     case "5":
-                        Console.Clear();
                         sair = true;
                         break;
                     default:
-                        Console.Clear();
                         Console.WriteLine("Opção inválida");
                         break;
                 }
             } while (!sair);
         }
-        private static TipoInvestimentoEnum MenuEscolhaInvestimento()
+        private static bool MenuConfirmarInvestimento()
         {
-            Console.Clear();
+            bool sair = false;
+            bool confirma = false;
             do
             {
+                Console.Clear();
+                Console.WriteLine("Deseja realizar este investimento? \n");
+                Console.WriteLine("[1] Sim");
+                Console.WriteLine("[2] Não");
+                string? opcao = Console.ReadLine();
+
+                switch (opcao)
+                {
+                    case "1":
+                        confirma = true;
+                        sair = true;
+                        break;
+                    case "2":
+                        sair = true;
+                        break;
+                    default:
+                        Console.WriteLine("Opção inválida");
+                        break;
+                }
+            } while (!sair);
+
+            return confirma;
+        } //ok
+        private static TipoInvestimentoEnum MenuEscolhaInvestimento()
+        {
+            do
+            {
+                Console.Clear();
                 Console.WriteLine("Escolha o tipo de investimento: ");
                 Console.WriteLine("[1] LCI: 8% a.a (resgate em 6 meses) ");
                 Console.WriteLine("[2] LCA: 9% a.a (resgate em 12 meses) ");
@@ -585,12 +341,370 @@ namespace DevinBank.App
                     case "3":
                         return TipoInvestimentoEnum.CDB;
                     default:
-                        Console.Clear();
                         Console.WriteLine("Opção inválida");
                         break;
                 }
             } while (true);
-        }
+        } //ok
+        private static AgenciaEnum MenuEscolhaAgencia()
+        {
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("Escolha sua agência: \n");
+                Console.WriteLine("[1] 001 - Florianópolis ");
+                Console.WriteLine("[2] 002 - São José ");
+                Console.WriteLine("[3] 003 - Biguaçu ");
+                string? opcao = Console.ReadLine();
+
+                switch (opcao)
+                {
+                    case "1":
+                        return AgenciaEnum.Fpolis;
+                    case "2":
+                        return AgenciaEnum.SaoJose;
+                    case "3":
+                        return AgenciaEnum.Biguacu;
+                    default:
+                        Console.WriteLine("Opção inválida");
+                        break;
+                }
+            } while (true);
+        } //ok
+        #endregion
+
+        #region Fluxos
+        private void FluxoCriarConta(string tipoConta)
+        {
+            Console.Clear();
+            string nome = Validacoes.ValidaString("Informe seu nome: ");
+            string cpf = Validacoes.PegaCPF("Informe seu CPF: ");
+            decimal renda = Validacoes.ValidaDecimal("Informe sua renda mensal: ");           
+            AgenciaEnum agencia = MenuEscolhaAgencia();
+
+            try
+            {
+                if (tipoConta == "poupança")
+                {
+                    Banco.SalvarConta(new ContaPoupanca(nome, cpf, renda, agencia));
+                } 
+                else if(tipoConta == "corrente")
+                {
+                    Banco.SalvarConta(new ContaCorrente(nome, cpf, renda, agencia));
+                }
+                else
+                {
+                    Banco.SalvarConta(new ContaInvestimento(nome, cpf, renda, agencia));
+                }
+
+                Console.Clear();
+                Console.WriteLine("Sua conta foi criada com sucesso!");
+                Console.WriteLine($"Este é o número da conta: {Banco.Contas.LastOrDefault()?.NumConta}\nGuarde-o em segurança!");
+
+                PressKey();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao salvar conta. {ex.Message}");
+            }
+
+        } //ok
+        private void FluxoAcessarConta()
+        {
+            Console.Clear();
+            string cpf = Validacoes.PegaCPF("Informe seu CPF: ");
+            int numConta = Validacoes.ValidaInt("Informe o número da conta: ");
+            try
+            {
+                Conta = Banco.AcessarConta(cpf, numConta);
+
+                MenuConta();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao tentar acessar conta. {ex.Message}");
+            }
+            
+        } //ok
+        private void FluxoListarContas()
+        {
+            Console.Clear();
+            foreach(var conta in Banco.Contas)
+            {
+                Console.WriteLine("* *** *** *** *** *** *");
+                Console.WriteLine(conta.Extrato());
+            }
+            Console.ReadKey(true);
+        } //mover para banco
+        private void FluxoListarContasSaldoNegativo()
+        {
+            Console.Clear();
+            IEnumerable<Conta> query = Banco.Contas.Where(conta => conta.Saldo < 0);
+
+            foreach (var conta in query)
+            {
+                Console.WriteLine("* *** *** *** *** *** *");
+                Console.WriteLine(conta.Extrato());
+            }
+            Console.ReadKey(true);
+        } //mover para banco
+        private void FluxoTotalEmInvestimentos()
+        {
+            Console.WriteLine("Resultado total em investimentos: \n");
+            Console.WriteLine($"Valor: R${Banco.TotalEmInvestimentos():N2}");
+        } //mover para banco
+        private void FluxoExtratoTransacoesCliente()
+        {
+            Console.Clear();
+            int numConta = Validacoes.ValidaInt("Informe o número da conta do cliente: ");
+            Console.Clear();
+            try
+            {
+                Console.WriteLine(Banco.AcessarConta(numConta).ExtratoTransacoes());
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+            }
+
+            PressKey();
+        } //ok
+        private void FluxoMudarData()
+        {
+            Console.Clear();
+            int dia = Validacoes.ValidaInt("Informe primeiro o dia (dd): ");
+            int mes = Validacoes.ValidaInt("Agora o Mês (mm): ");
+            int ano = Validacoes.ValidaInt("Por ultimo, informe o Ano (yyyy): ");
+
+            try
+            {
+                Banco.AtualizaData(new DateTime(ano, mes, dia));
+                Banco.AtualizaContas();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+            }
+        } //ok
+        private void FluxoSaque()
+        {
+            Console.Clear();
+            decimal montante = Validacoes.ValidaDecimal("Quanto quer sacar?");
+
+            try
+            {
+                Conta?.Saque(montante, Banco.Data);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+            }
+        } //ok
+        private void FluxoDeposito()
+        {
+            Console.Clear();
+            decimal montante = Validacoes.ValidaDecimal("Quanto quer depositar?");
+
+            try
+            {
+                Conta?.Deposito(montante, Banco.Data);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+            }
+        } //ok
+        private void FluxoTransferencia()
+        {
+            Console.Clear();
+            decimal montante = Validacoes.ValidaDecimal("Quanto quer transferir? ");
+            int numConta = Validacoes.ValidaInt("Para qual conta deseja transferir? ");
+
+            try
+            {
+                Conta?.Transferencia(Banco.AcessarConta(numConta), montante, Banco.Data);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+            }
+        } //ok
+        private void FluxoExtrato()
+        {
+            Console.Clear();
+            Console.WriteLine("Seu extrato: \n");
+
+            try
+            {
+                Console.WriteLine(Conta?.Extrato());
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+            }
+            PressKey();
+        } //ok
+        private void FluxoEditarCadastro(string opcao)
+        {
+            Console.Clear();
+            if(opcao == "nome")
+            {
+                string nome = Validacoes.ValidaString("Digite o novo nome: ");
+                try
+                {
+                    Conta?.AlterarCadastro(nome);
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+                }
+            }
+            else if(opcao == "renda")
+            {
+                decimal renda = Validacoes.ValidaDecimal("Informe sua nova renda: ");
+                try
+                {
+                    Conta?.AlterarCadastro(renda);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+                }
+            }
+            else
+            {
+                AgenciaEnum agencia = MenuEscolhaAgencia();
+                try
+                {
+                    Conta?.AlterarCadastro(agencia);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+                }
+            }
+        } //ok
+        private void FluxoMaisOpcoes()
+        {
+            Console.Clear();
+            if (Conta is ContaPoupanca)
+            {
+                MenuContaPoupanca();
+            }
+            else if(Conta is ContaCorrente)
+            {
+                MenuContaCorrente();
+            }
+            else
+            {
+                MenuContaInvest();
+            } 
+        } //ok
+        private void FluxoExtratoTransacoes()
+        {
+            Console.Clear();
+            try
+            {
+                Console.WriteLine(Conta?.ExtratoTransacoes());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+            }
+
+            PressKey();
+        } //ok
+        private void FluxoHistoricoTransferencias()
+        {
+            Console.Clear();
+            try
+            {
+                Console.WriteLine(Conta?.HistoricoTransferencias());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+            }
+
+            PressKey();
+        } //ok
+        private void FluxoSimularRendimentoPoupanca()
+        {
+            Console.Clear();
+            int tempo = Validacoes.ValidaInt("Informe a quantidade de tempo(em meses): ");
+            int rentab = Validacoes.ValidaInt("Informe a rentabilidade anual: ");
+
+            try
+            {
+                if (Conta is ContaPoupanca conta)
+                {
+                    decimal rend = conta.SimularRendimento(Conta.Saldo, tempo, rentab);
+                    Console.WriteLine($"Saldo ao final: R${rend + conta.Saldo:N2}");
+                    Console.WriteLine($"Rendimentos totais: R${rend:N2}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+            }
+            PressKey();
+        } //ok
+        private void FluxoSimularInvestimento()
+        {
+            Console.Clear();
+            var tipoInvest = MenuEscolhaInvestimento();
+            decimal montante = Validacoes.ValidaDecimal("Qual valor deseja aplicar? ");
+            int tempo = Validacoes.ValidaInt("Informe a quantidade de tempo(em meses): ");
+
+            try
+            {
+                decimal rend = ContaInvestimento.SimularRendimento(montante, tempo, new TipoInvestimento(tipoInvest));
+
+                Console.WriteLine($"Saldo ao final: R${rend + Conta?.Saldo:N2}");
+                Console.WriteLine($"Rendimentos totais: R${rend:N2}\n");
+
+                PressKey();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+            }
+
+            if (MenuConfirmarInvestimento())
+                FluxoInvestir(montante, tempo, tipoInvest);
+
+        } //ok
+        private void FluxoInvestir()
+        {
+            Console.Clear();
+            var tipoInvest = MenuEscolhaInvestimento();
+            decimal montante = Validacoes.ValidaDecimal("Qual valor deseja aplicar? ");
+            int tempo = Validacoes.ValidaInt("Informe a quantidade de tempo(em meses): ");
+
+            try
+            {
+                if (Conta is ContaInvestimento conta)
+                    conta.Investimento(montante, tempo, Banco.Data, new TipoInvestimento(tipoInvest));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+            }
+        } //ok
+        private void FluxoInvestir(decimal montante, int tempo, TipoInvestimentoEnum tipoInvest)
+        {
+            Console.Clear();
+
+            try
+            {
+                if (Conta is ContaInvestimento conta)
+                    conta.Investimento(montante, tempo, Banco.Data, new TipoInvestimento(tipoInvest));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+            }
+        } //ok
         #endregion
 
         #region Misc
@@ -608,7 +722,14 @@ namespace DevinBank.App
 
             Console.WriteLine(logo + "\n");
         }
+        private static void PressKey()
+        {
+            Console.WriteLine("\nPressione qualquer tecla para continuar...");
+            Console.ReadKey(true);
+        }
         #endregion
+
+        
 
     }
 }

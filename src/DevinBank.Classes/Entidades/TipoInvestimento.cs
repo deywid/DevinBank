@@ -5,10 +5,10 @@ namespace DevinBank.Library
 {
     public class TipoInvestimento
     {
-        public TipoInvestimentoEnum IdInvestimento { get; private set; }
-        public string Nome { get; private set; }
-        public decimal Rentabilidade { get; private set; }
-        public int TempoResgate { get; private set; }
+        public TipoInvestimentoEnum IdInvestimento { get; }
+        public string Nome { get; }
+        public decimal Rentabilidade { get; }
+        public int TempoResgate { get; }
         public TipoInvestimento(TipoInvestimentoEnum idInvestimento)
         {
             IdInvestimento = idInvestimento;
@@ -47,7 +47,7 @@ namespace DevinBank.Library
                 return 10.0m;
             }
         }
-        private static int PegaTempoResgate(TipoInvestimentoEnum idInvestimento)
+        public static int PegaTempoResgate(TipoInvestimentoEnum idInvestimento)
         {
             if (idInvestimento == TipoInvestimentoEnum.LCI)
             {
@@ -62,5 +62,6 @@ namespace DevinBank.Library
                 return 36;
             }
         }
+
     }
 }

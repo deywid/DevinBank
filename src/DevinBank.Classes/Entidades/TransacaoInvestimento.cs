@@ -3,10 +3,10 @@ namespace DevinBank.Library
 {
     public class TransacaoInvestimento : Transacao
     {
-        public TipoInvestimento TipoInvestimento { get; private set; }
+        public TipoInvestimento TipoInvestimento { get; }
         public decimal ValorLiquido { get; set; }
-        public DateTime DataRetirada { get; private set; }
-        public DateTime DataFinalInvestimento { get; set; }
+        public DateTime DataRetirada { get; }
+        public DateTime DataFinalInvestimento { get; }
         public TransacaoInvestimento(TipoTransacao tipo, decimal valor, DateTime data, int meses, TipoInvestimento tipoInvestimento)
             :base(tipo, valor, data)
         {
@@ -14,7 +14,6 @@ namespace DevinBank.Library
             DataRetirada = Data.AddMonths(TipoInvestimento.TempoResgate);
             DataFinalInvestimento = Data.AddMonths(meses);
         }
-
 
     }
 }

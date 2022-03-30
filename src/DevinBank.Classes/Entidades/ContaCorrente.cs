@@ -13,20 +13,16 @@ namespace DevinBank.Library
 
         public override void Saque(decimal montante, DateTime data)
         {
-            if(montante > Saldo + LimiteChequeEspecial)
+            if (montante <= Saldo)
             {
-                throw new Exception("Saldo insuficiente");
-            }
-            else if(montante <= 0)
-            {
-                throw new Exception("O valor informado é inválido");
+                Saldo -= montante;
+
+                TipoTransacao tipo = new(TipoTransacaoEnum.Saque);
+                SalvarTransacao(tipo, montante, data);
             }
             else
             {
-                Saldo -= montante;
-                
-                TipoTransacao tipo = new(TipoTransacaoEnum.Saque);
-                SalvarTransacao(tipo, montante, data);
+                throw new Exception("Saldo insuficiente.");
             }
 
         }
@@ -34,25 +30,30 @@ namespace DevinBank.Library
         {
             if (montante > Saldo + LimiteChequeEspecial)
             {
-                throw new Exception("Saldo insuficiente");
+                throw new Exception("Saldo insuficiente.");
             }
-            else if (montante <= 0)
+            else if (contaBeneficiaria.NumConta == NumConta)
             {
-                throw new Exception("O valor informado é inválido");
+                throw new Exception("Não é possível efetuar transferências para a mesma conta.");
+            }
+            else if (data.DayOfWeek == DayOfWeek.Sunday || data.DayOfWeek == DayOfWeek.Saturday)
+            {
+                throw new Exception("Não é possível efetuar transferências aos finais de semana.");
             }
             else
             {
-            Saldo -= montante;
-            contaBeneficiaria.Saldo += montante;
+                Saldo -= montante;
+                contaBeneficiaria.Saldo += montante;
+
+                TipoTransacao tipo = new(TipoTransacaoEnum.Transferencia);
+                SalvarTransacao(tipo, montante, data);
+                SalvarTransferencia(contaBeneficiaria, montante, data);
             }
 
-            TipoTransacao tipo = new(TipoTransacaoEnum.Transferencia);
-            SalvarTransacao(tipo, montante, data);
-            SalvarTransferencia(contaBeneficiaria, montante, data);
         }
         public override string Extrato()
         {
-            return $"\nCliente: {Nome}\nCPF: {CPF}\nConta: {NumConta}\nAgencia: {Agencia}\n\nSaldo em conta: {Saldo}\n\nLimite do cheque especial: {LimiteChequeEspecial}";
+            return $"\nCliente: {Nome}\nCPF: {CPF}\nConta: {NumConta}\nAgencia: {Agencia}\n\nSaldo em conta: {Saldo:N2}\n\nLimite do cheque especial: {LimiteChequeEspecial:N2}";
         }
 
     }

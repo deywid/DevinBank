@@ -28,10 +28,17 @@ namespace DevinBank.Library
 
         public virtual void Saque(decimal montante, DateTime data)
         {
-            Saldo -= montante;
+            if(montante <= Saldo)
+            {
+                Saldo -= montante;
 
-            TipoTransacao tipo = new(TipoTransacaoEnum.Saque);
-            SalvarTransacao(tipo, montante, data);
+                TipoTransacao tipo = new(TipoTransacaoEnum.Saque);
+                SalvarTransacao(tipo, montante, data);
+            }
+            else
+            {
+                throw new Exception("Saldo insuficiente.");
+            }
         }
         public void Deposito(decimal montante, DateTime data)
         {
@@ -42,16 +49,32 @@ namespace DevinBank.Library
         }
         public virtual void Transferencia(Conta contaBeneficiaria, decimal montante, DateTime data)
         {
-            Saldo -= montante;
-            contaBeneficiaria.Saldo += montante;
+            if(montante > Saldo)
+            {
+                throw new Exception("Saldo insuficiente.");
+            }
+            else if(contaBeneficiaria.NumConta == NumConta)
+            {
+                throw new Exception("Não é possível efetuar transferências para a mesma conta.");
+            }
+            else if(data.DayOfWeek == DayOfWeek.Sunday || data.DayOfWeek == DayOfWeek.Saturday)
+            {
+                throw new Exception("Não é possível efetuar transferências aos finais de semana.");
+            }
+            else
+            {
+                Saldo -= montante;
+                contaBeneficiaria.Saldo += montante;
 
-            TipoTransacao tipo = new(TipoTransacaoEnum.Transferencia);
-            SalvarTransacao(tipo, montante, data);
-            SalvarTransferencia(contaBeneficiaria, montante, data);
+                TipoTransacao tipo = new(TipoTransacaoEnum.Transferencia);
+                SalvarTransacao(tipo, montante, data);
+                SalvarTransferencia(contaBeneficiaria, montante, data);
+            }
+
         }
         public virtual string Extrato()
         {
-            return $"\nCliente: {Nome}\nCPF: {CPF}\nConta: {NumConta}\nAgencia: {Agencia}\n\nSaldo em conta: {Saldo}";
+            return $"\nCliente: {Nome}\nCPF: {CPF}\nConta: {NumConta}\nAgencia: {Agencia}\n\nSaldo em conta: R${Saldo:N2}";
         }
         public void AlterarCadastro(string nome)
         {
@@ -69,34 +92,30 @@ namespace DevinBank.Library
         {
             Transferencias.Add(new Transferencia(this, contaDestino, valor, data));
         }
+        public void SalvarTransacao(TipoTransacao tipo, decimal valor, DateTime data)
+        {
+            Transacoes.Add(new Transacao(tipo, valor, data));
+        }
         public string HistoricoTransferencias()
         {
             string historico = "Histórico de Transferencias:\n";
             foreach (var transferencia in Transferencias)
             {
-                historico += $"\nConta: {transferencia.ContaOrigem.NumConta}\nBeneficiario: {transferencia.ContaDestino.NumConta}\nValor: {transferencia.Valor}\nData: {transferencia.Data}\n";
+                historico += $"\nConta origem: {transferencia.ContaOrigem.NumConta}\nBeneficiario: {transferencia.ContaDestino.NumConta}\nValor: {transferencia.Valor:N2}\nData: {transferencia.Data.ToString("d")}\n";
             }
             return historico;
-        }
-        public void SalvarTransacao(TipoTransacao tipo, decimal valor, DateTime data)
-        {
-            Transacoes.Add(new Transacao(tipo, valor, data));
         }
         public virtual string ExtratoTransacoes()
         {
             string extrato = "Extrato das transações:\n";
             foreach (var transacoes in Transacoes)
             {
-                extrato += $"\nTransação: {transacoes.TipoTransacao.Nome}\nValor: {transacoes.Valor}\nData: {transacoes.Data}\n";
+                extrato += $"\nTransação: {transacoes.TipoTransacao.Nome}\nValor: {transacoes.Valor:N2}\nData: {transacoes.Data.ToString("d")}\n";
             }
             return extrato;
 
         }
        
-
     }
-
-
-
 
 }
