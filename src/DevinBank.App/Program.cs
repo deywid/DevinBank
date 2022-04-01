@@ -6,7 +6,7 @@ namespace DevinBank.App
         static void Main(string[] args)
         {
 
-            ConsolePatterns run = new ConsolePatterns();
+            ConsolePatterns run = new();
 
             //run.Logo();
             run.MainMenu();

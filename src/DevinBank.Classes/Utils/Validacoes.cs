@@ -6,41 +6,34 @@ namespace DevinBank.Library.Utils
         public static string ValidaString(string texto)
         {
             string input;
-            bool notOk;
             do
             {
                 Console.WriteLine(texto);
-                input = Console.ReadLine();
-                notOk = String.IsNullOrWhiteSpace(input);
+                input = Console.ReadLine()!;
 
-                if (notOk)
+                if (String.IsNullOrWhiteSpace(input))
                     Console.WriteLine("O valor digitado é inválido. \n");
 
                 Console.Clear();
-            } while (notOk);
+            } while (String.IsNullOrWhiteSpace(input));
 
             return input;
         }
-
         public static string PegaCPF(string texto)
         {
             string input;
-            bool ok;
             do
             {
-                Console.WriteLine(texto);
-                input = Console.ReadLine();
-                ok = ValidaCPF.IsCpf(input);
+                input = ValidaString(texto);
 
-                if (!ok)
-                    Console.WriteLine("O valor digitado é inválido. \n");
+                if (!ValidaCPF.IsCpf(input))
+                    Console.WriteLine("CPF inválido. \n");
 
                 Console.Clear();
-            } while (!ok);
+            } while (!ValidaCPF.IsCpf(input));
 
             return input;
         }
-
         public static decimal ValidaDecimal(string texto)
         {
             decimal input;
@@ -50,9 +43,11 @@ namespace DevinBank.Library.Utils
                 Console.WriteLine(texto);
                 ok = decimal.TryParse(Console.ReadLine(), out input);
 
-                if (!ok)
+                if (!ok || input <= 0)
+                {
                     Console.WriteLine("O valor digitado é inválido. \n");
-
+                    ok = false;
+                }
                 Console.Clear();
             } while (!ok);
 
@@ -67,13 +62,16 @@ namespace DevinBank.Library.Utils
                 Console.WriteLine(texto);
                 ok = int.TryParse(Console.ReadLine(), out input);
 
-                if (!ok)
+                if (!ok || input <= 0)
+                {
                     Console.WriteLine("O valor digitado é inválido. \n");
-
+                    ok = false;
+                }
                 Console.Clear();
             } while (!ok);
 
             return input;
         }
     }
+
 }

@@ -1,6 +1,6 @@
 ﻿using DevinBank.Library.Enums;
 
-namespace DevinBank.Library
+namespace DevinBank.Library.Modelos
 {
     public class TipoTransacao
     {
@@ -12,7 +12,7 @@ namespace DevinBank.Library
             Nome = PegaNomeTransacao(idTransacao);
         }
 
-        private static string PegaNomeTransacao(TipoTransacaoEnum idTransacao)
+        public static string PegaNomeTransacao(TipoTransacaoEnum idTransacao)
         {
             if(idTransacao == TipoTransacaoEnum.Saque)
             {
@@ -31,5 +31,6 @@ namespace DevinBank.Library
                 return "Investimento";
             }
         }
+
     }
 }

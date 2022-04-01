@@ -1,7 +1,7 @@
 ﻿
 using DevinBank.Library.Enums;
 
-namespace DevinBank.Library
+namespace DevinBank.Library.Modelos
 {
     public class TipoInvestimento
     {
@@ -12,27 +12,27 @@ namespace DevinBank.Library
         public TipoInvestimento(TipoInvestimentoEnum idInvestimento)
         {
             IdInvestimento = idInvestimento;
-            Nome = PegaNomeInvestimento(idInvestimento);
+            Nome = PegaNome(idInvestimento);
             Rentabilidade = PegaRentabilidade(idInvestimento);
             TempoResgate = PegaTempoResgate(idInvestimento);
         }
 
-        private static string PegaNomeInvestimento(TipoInvestimentoEnum idInvestimento)
+        public static string PegaNome(TipoInvestimentoEnum idInvestimento)
         {
             if (idInvestimento == TipoInvestimentoEnum.LCI)
             {
-                return "LCI (8% a.a.)";
+                return $"LCI: {PegaRentabilidade(TipoInvestimentoEnum.LCI)}% a.a.";
             }
             else if (idInvestimento == TipoInvestimentoEnum.LCA)
             {
-                return "LCA (9% a.a.)";
+                return $"LCA: {PegaRentabilidade(TipoInvestimentoEnum.LCA)}% a.a.";
             }
             else
             {
-                return "CDB (10% a.a.)";
+                return $"CDB: {PegaRentabilidade(TipoInvestimentoEnum.CDB)}% a.a.";
             }
         }
-        private static decimal PegaRentabilidade(TipoInvestimentoEnum idInvestimento)
+        public static decimal PegaRentabilidade(TipoInvestimentoEnum idInvestimento)
         {
             if (idInvestimento == TipoInvestimentoEnum.LCI)
             {

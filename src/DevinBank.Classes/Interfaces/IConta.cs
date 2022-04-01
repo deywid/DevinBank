@@ -1,10 +1,11 @@
-﻿using DevinBank.Library.Enums;
+﻿
+using DevinBank.Library.Modelos;
 
 namespace DevinBank.Library
 {
     public interface IConta
     {
-        AgenciaEnum Agencia { get; }
+        Agencia Agencia { get; }
         string CPF { get; }
         string Nome { get; }
         int NumConta { get; }
@@ -19,7 +20,7 @@ namespace DevinBank.Library
         string Extrato();
         void AlterarCadastro(string nome);
         void AlterarCadastro(decimal rendaMensal);
-        void AlterarCadastro(AgenciaEnum agencia);
+        void AlterarCadastro(Agencia agencia);
         string ExtratoTransacoes();
         void SalvarTransferencia(IConta contaDestino, decimal valor, DateTime data);
         string HistoricoTransferencias();

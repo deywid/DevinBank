@@ -1,4 +1,6 @@
 ﻿
+using DevinBank.Library.Modelos;
+
 namespace DevinBank.Library
 {
     public class Transacao

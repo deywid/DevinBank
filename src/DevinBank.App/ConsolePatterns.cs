@@ -1,5 +1,6 @@
 ﻿using DevinBank.Library;
 using DevinBank.Library.Enums;
+using DevinBank.Library.Modelos;
 using DevinBank.Library.Utils;
 
 namespace DevinBank.App
@@ -12,6 +13,7 @@ namespace DevinBank.App
         #region Menus -ok
         public void MainMenu()
         {
+            AtualizaTitulo(false);
             bool sair = false;
             do
             {
@@ -155,6 +157,7 @@ namespace DevinBank.App
                         FluxoMaisOpcoes();
                         break;
                     case "7":
+                        AtualizaTitulo(false);
                         sair = true;
                         break;
                     default:
@@ -292,14 +295,12 @@ namespace DevinBank.App
                 }
             } while (!sair);
         }
-        private static bool MenuConfirmarInvestimento()
+        private static bool MenuSimOuNao()
         {
             bool sair = false;
             bool confirma = false;
             do
             {
-                Console.Clear();
-                Console.WriteLine("Deseja realizar este investimento? \n");
                 Console.WriteLine("[1] Sim");
                 Console.WriteLine("[2] Não");
                 string? opcao = Console.ReadLine();
@@ -327,18 +328,21 @@ namespace DevinBank.App
             {
                 Console.Clear();
                 Console.WriteLine("Escolha o tipo de investimento: ");
-                Console.WriteLine("[1] LCI: 8% a.a (resgate em 6 meses) ");
-                Console.WriteLine("[2] LCA: 9% a.a (resgate em 12 meses) ");
-                Console.WriteLine("[3] CDB: 10% a.a (resgate em 36 meses) ");
+                Console.WriteLine($"[1] {TipoInvestimento.PegaNome(TipoInvestimentoEnum.LCI)} (resgate em {TipoInvestimento.PegaRentabilidade(TipoInvestimentoEnum.LCI)} meses) ");
+                Console.WriteLine($"[2] {TipoInvestimento.PegaNome(TipoInvestimentoEnum.LCA)} (resgate em {TipoInvestimento.PegaRentabilidade(TipoInvestimentoEnum.LCA)} meses) ");
+                Console.WriteLine($"[3] {TipoInvestimento.PegaNome(TipoInvestimentoEnum.CDB)} (resgate em {TipoInvestimento.PegaRentabilidade(TipoInvestimentoEnum.CDB)} meses) ");
                 string? opcao = Console.ReadLine();
 
                 switch (opcao)
                 {
                     case "1":
+                        Console.Clear();
                         return TipoInvestimentoEnum.LCI;
                     case "2":
+                        Console.Clear();
                         return TipoInvestimentoEnum.LCA;
                     case "3":
+                        Console.Clear();
                         return TipoInvestimentoEnum.CDB;
                     default:
                         Console.WriteLine("Opção inválida");
@@ -352,18 +356,21 @@ namespace DevinBank.App
             {
                 Console.Clear();
                 Console.WriteLine("Escolha sua agência: \n");
-                Console.WriteLine("[1] 001 - Florianópolis ");
-                Console.WriteLine("[2] 002 - São José ");
-                Console.WriteLine("[3] 003 - Biguaçu ");
+                Console.WriteLine($"[1] {Agencia.PegaNome(AgenciaEnum.Fpolis)}");
+                Console.WriteLine($"[2] {Agencia.PegaNome(AgenciaEnum.SaoJose)}");
+                Console.WriteLine($"[3] {Agencia.PegaNome(AgenciaEnum.Biguacu)}");
                 string? opcao = Console.ReadLine();
 
                 switch (opcao)
                 {
                     case "1":
+                        Console.Clear();
                         return AgenciaEnum.Fpolis;
                     case "2":
+                        Console.Clear();
                         return AgenciaEnum.SaoJose;
                     case "3":
+                        Console.Clear();
                         return AgenciaEnum.Biguacu;
                     default:
                         Console.WriteLine("Opção inválida");
@@ -381,34 +388,32 @@ namespace DevinBank.App
             string cpf = Validacoes.PegaCPF("Informe seu CPF: ");
             decimal renda = Validacoes.ValidaDecimal("Informe sua renda mensal: ");           
             AgenciaEnum agencia = MenuEscolhaAgencia();
-
             try
             {
                 if (tipoConta == "poupança")
                 {
-                    Banco.SalvarConta(new ContaPoupanca(nome, cpf, renda, agencia));
+                    Banco.SalvarConta(new ContaPoupanca(nome, cpf, renda, new Agencia(agencia)));
                 } 
                 else if(tipoConta == "corrente")
                 {
-                    Banco.SalvarConta(new ContaCorrente(nome, cpf, renda, agencia));
+                    Banco.SalvarConta(new ContaCorrente(nome, cpf, renda, new Agencia(agencia)));
                 }
                 else
                 {
-                    Banco.SalvarConta(new ContaInvestimento(nome, cpf, renda, agencia));
+                    Banco.SalvarConta(new ContaInvestimento(nome, cpf, renda, new Agencia(agencia)));
                 }
 
                 Console.Clear();
-                Console.WriteLine("Sua conta foi criada com sucesso!");
+                Console.WriteLine("Sua conta foi criada com sucesso! \n");
                 Console.WriteLine($"Este é o número da conta: {Banco.Contas.LastOrDefault()?.NumConta}\nGuarde-o em segurança!");
-
-                PressKey();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao salvar conta. {ex.Message}");
+                ErrorMsg(ex);
             }
+            PressKey();
 
-        } //ok
+        } // teste ok
         private void FluxoAcessarConta()
         {
             Console.Clear();
@@ -417,133 +422,155 @@ namespace DevinBank.App
             try
             {
                 Conta = Banco.AcessarConta(cpf, numConta);
-
+                Greetings();
                 MenuConta();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Erro ao tentar acessar conta. {ex.Message}");
+                PressKey();
             }
-            
-        } //ok
+        } // teste ok
         private void FluxoListarContas()
         {
             Console.Clear();
-            foreach(var conta in Banco.Contas)
+            try
             {
-                Console.WriteLine("* *** *** *** *** *** *");
-                Console.WriteLine(conta.Extrato());
+                Console.WriteLine(Banco.ListarContas());
             }
-            Console.ReadKey(true);
-        } //mover para banco
+            catch(Exception ex)
+            {
+                ErrorMsg(ex);
+            }
+            PressKey();
+
+        } //teste ok
         private void FluxoListarContasSaldoNegativo()
         {
             Console.Clear();
-            IEnumerable<Conta> query = Banco.Contas.Where(conta => conta.Saldo < 0);
-
-            foreach (var conta in query)
+            try
             {
-                Console.WriteLine("* *** *** *** *** *** *");
-                Console.WriteLine(conta.Extrato());
+                Banco.ListarContasSaldoNegativo();
             }
-            Console.ReadKey(true);
-        } //mover para banco
+            catch (Exception ex)
+            {
+                ErrorMsg(ex);
+            }
+            PressKey();
+
+        } //teste ok
         private void FluxoTotalEmInvestimentos()
         {
-            Console.WriteLine("Resultado total em investimentos: \n");
-            Console.WriteLine($"Valor: R${Banco.TotalEmInvestimentos():N2}");
-        } //mover para banco
+            Console.Clear();
+            try
+            {
+                Console.WriteLine($"Valor total dos investimentos: R$ {Banco.TotalEmInvestimentos():N2}");
+            }
+            catch (Exception ex)
+            {
+                ErrorMsg(ex);
+            }
+            PressKey();
+
+        } // teste ok
         private void FluxoExtratoTransacoesCliente()
         {
             Console.Clear();
             int numConta = Validacoes.ValidaInt("Informe o número da conta do cliente: ");
-            Console.Clear();
             try
             {
                 Console.WriteLine(Banco.AcessarConta(numConta).ExtratoTransacoes());
             }
             catch(Exception ex)
             {
-                Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+                ErrorMsg(ex);
             }
 
             PressKey();
-        } //ok
+        } // teste ok
         private void FluxoMudarData()
         {
             Console.Clear();
             int dia = Validacoes.ValidaInt("Informe primeiro o dia (dd): ");
             int mes = Validacoes.ValidaInt("Agora o Mês (mm): ");
             int ano = Validacoes.ValidaInt("Por ultimo, informe o Ano (yyyy): ");
-
             try
             {
                 Banco.AtualizaData(new DateTime(ano, mes, dia));
                 Banco.AtualizaContas();
+                Console.WriteLine("A data foi atualizada com sucesso!");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+                ErrorMsg(ex);
             }
-        } //ok
+            PressKey();
+
+        } // teste ok
         private void FluxoSaque()
         {
             Console.Clear();
             decimal montante = Validacoes.ValidaDecimal("Quanto quer sacar?");
-
             try
             {
                 Conta?.Saque(montante, Banco.Data);
+                Console.WriteLine($"Saque de R${montante:N2} realizado com sucesso!");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+                ErrorMsg(ex);
             }
-        } //ok
+            PressKey();
+
+        } //teste ok
         private void FluxoDeposito()
         {
             Console.Clear();
             decimal montante = Validacoes.ValidaDecimal("Quanto quer depositar?");
-
             try
             {
                 Conta?.Deposito(montante, Banco.Data);
+                Console.WriteLine($"Depósito de R${montante:N2} realizado com sucesso!");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+                ErrorMsg(ex);
             }
-        } //ok
+            PressKey();
+
+        } // teste ok
         private void FluxoTransferencia()
         {
             Console.Clear();
             decimal montante = Validacoes.ValidaDecimal("Quanto quer transferir? ");
             int numConta = Validacoes.ValidaInt("Para qual conta deseja transferir? ");
-
             try
             {
-                Conta?.Transferencia(Banco.AcessarConta(numConta), montante, Banco.Data);
+                var benef = Banco.AcessarConta(numConta);
+                Conta?.Transferencia(benef, montante, Banco.Data);
+                Console.WriteLine($"Transferência de R$ {montante:N2} para {benef.Nome} realizada com sucesso!");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+                ErrorMsg(ex);
             }
-        } //ok
+            PressKey();
+
+        } // teste ok
         private void FluxoExtrato()
         {
             Console.Clear();
-            Console.WriteLine("Seu extrato: \n");
-
+            Console.WriteLine("Seu extrato: ");
             try
             {
                 Console.WriteLine(Conta?.Extrato());
             }
             catch(Exception ex)
             {
-                Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+                ErrorMsg(ex);
             }
             PressKey();
-        } //ok
+        } // teste ok
         private void FluxoEditarCadastro(string opcao)
         {
             Console.Clear();
@@ -556,7 +583,7 @@ namespace DevinBank.App
                 }
                 catch(Exception ex)
                 {
-                    Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+                    ErrorMsg(ex);
                 }
             }
             else if(opcao == "renda")
@@ -568,7 +595,7 @@ namespace DevinBank.App
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+                    ErrorMsg(ex);
                 }
             }
             else
@@ -576,14 +603,14 @@ namespace DevinBank.App
                 AgenciaEnum agencia = MenuEscolhaAgencia();
                 try
                 {
-                    Conta?.AlterarCadastro(agencia);
+                    Conta?.AlterarCadastro(new Agencia(agencia));
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+                    ErrorMsg(ex);
                 }
             }
-        } //ok
+        } // teste ok
         private void FluxoMaisOpcoes()
         {
             Console.Clear();
@@ -599,7 +626,7 @@ namespace DevinBank.App
             {
                 MenuContaInvest();
             } 
-        } //ok
+        } // s/teste ok
         private void FluxoExtratoTransacoes()
         {
             Console.Clear();
@@ -609,11 +636,10 @@ namespace DevinBank.App
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+                ErrorMsg(ex);
             }
-
             PressKey();
-        } //ok
+        } // teste ok
         private void FluxoHistoricoTransferencias()
         {
             Console.Clear();
@@ -623,88 +649,110 @@ namespace DevinBank.App
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+                ErrorMsg(ex);
             }
-
             PressKey();
-        } //ok
+        } // teste ok
         private void FluxoSimularRendimentoPoupanca()
         {
             Console.Clear();
-            int tempo = Validacoes.ValidaInt("Informe a quantidade de tempo(em meses): ");
-            int rentab = Validacoes.ValidaInt("Informe a rentabilidade anual: ");
-
             try
             {
-                if (Conta is ContaPoupanca conta)
+                if (Conta!.Saldo > 0)
                 {
-                    decimal rend = conta.SimularRendimento(Conta.Saldo, tempo, rentab);
-                    Console.WriteLine($"Saldo ao final: R${rend + conta.Saldo:N2}");
+                    int tempo = Validacoes.ValidaInt("Informe a quantidade de tempo(em meses): ");
+                    int rentab = Validacoes.ValidaInt("Informe a rentabilidade anual: ");
+
+                    decimal rend = ContaPoupanca.SimularRendimento(Conta.Saldo, tempo, rentab);
+                    Console.WriteLine($"Saldo ao final: R${rend + Conta.Saldo:N2}");
                     Console.WriteLine($"Rendimentos totais: R${rend:N2}");
+                }
+                else
+                {
+                    throw new Exception("Não é possível simular seus rendimentos. Sem saldo em conta.");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+                ErrorMsg(ex);
             }
             PressKey();
+
+            FluxoEscolhaDeposito();
+
         } //ok
+        private void FluxoEscolhaDeposito()
+        {
+            Console.Clear();
+            Console.WriteLine("Deseja realizar um depósito agora? \n");
+            if (MenuSimOuNao())
+                FluxoDeposito();
+
+        } // s/teste ok
         private void FluxoSimularInvestimento()
         {
             Console.Clear();
             var tipoInvest = MenuEscolhaInvestimento();
             decimal montante = Validacoes.ValidaDecimal("Qual valor deseja aplicar? ");
             int tempo = Validacoes.ValidaInt("Informe a quantidade de tempo(em meses): ");
-
             try
             {
                 decimal rend = ContaInvestimento.SimularRendimento(montante, tempo, new TipoInvestimento(tipoInvest));
-
-                Console.WriteLine($"Saldo ao final: R${rend + Conta?.Saldo:N2}");
-                Console.WriteLine($"Rendimentos totais: R${rend:N2}\n");
-
-                PressKey();
+                Console.WriteLine($"Saldo ao final: R${rend + montante:N2}");
+                Console.WriteLine($"Rendimentos totais: R${rend:N2}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+                ErrorMsg(ex);
             }
+            PressKey();
 
-            if (MenuConfirmarInvestimento())
-                FluxoInvestir(montante, tempo, tipoInvest);
+            FluxoEscolhaInvestir(montante, tempo, tipoInvest);
 
         } //ok
+        private void FluxoEscolhaInvestir(decimal montante, int tempo, TipoInvestimentoEnum tipoInvest)
+        {
+            Console.Clear();
+            Console.WriteLine("Deseja realizar este investimento? \n");
+            if (MenuSimOuNao())
+                FluxoInvestir(montante, tempo, tipoInvest);
+
+        } // s/teste ok
         private void FluxoInvestir()
         {
             Console.Clear();
             var tipoInvest = MenuEscolhaInvestimento();
             decimal montante = Validacoes.ValidaDecimal("Qual valor deseja aplicar? ");
             int tempo = Validacoes.ValidaInt("Informe a quantidade de tempo(em meses): ");
-
             try
             {
                 if (Conta is ContaInvestimento conta)
                     conta.Investimento(montante, tempo, Banco.Data, new TipoInvestimento(tipoInvest));
+                Console.WriteLine($"Investimento de R$ {montante:N2} em {TipoInvestimento.PegaNome(tipoInvest)} realizado com sucesso!");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+                ErrorMsg(ex);
             }
-        } //ok
+            PressKey();
+
+        } // teste ok
         private void FluxoInvestir(decimal montante, int tempo, TipoInvestimentoEnum tipoInvest)
         {
             Console.Clear();
-
             try
             {
                 if (Conta is ContaInvestimento conta)
                     conta.Investimento(montante, tempo, Banco.Data, new TipoInvestimento(tipoInvest));
+                Console.WriteLine($"Investimento de R$ {montante:N2} em {TipoInvestimento.PegaNome(tipoInvest)} realizado com sucesso!");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ocorreu um erro ao processar a requisição. {ex.Message}");
+                ErrorMsg(ex);
             }
-        } //ok
+            PressKey();
+
+        } // teste ok
         #endregion
 
         #region Misc
@@ -727,9 +775,30 @@ namespace DevinBank.App
             Console.WriteLine("\nPressione qualquer tecla para continuar...");
             Console.ReadKey(true);
         }
+        private static void ErrorMsg(Exception ex)
+        {
+            Console.WriteLine($"Não foi possível processar a requisição. {ex.Message}");
+        }
+        private void Greetings()
+        {
+            Console.Clear();
+            AtualizaTitulo(true);
+            Console.WriteLine($"Que bom que você veio, {Conta!.Nome}!");
+            PressKey();
+        }
+        private void AtualizaTitulo(bool isLoggedin)
+        {
+            if (isLoggedin)
+            {
+                Console.Title = $"|DevIn BANK        |Cliente: {Conta!.Nome}        |Conta: {Conta.NumConta}        |Data: {Banco.Data:d}".ToUpper();
+            }
+            else
+            {
+                Console.Title = "|DevIn BANK";
+            }
+        }
         #endregion
 
-        
-
+      
     }
 }

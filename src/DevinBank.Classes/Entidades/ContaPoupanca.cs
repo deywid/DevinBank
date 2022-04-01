@@ -1,16 +1,17 @@
-﻿using DevinBank.Library.Enums;
+﻿using DevinBank.Library.Modelos;
 
 namespace DevinBank.Library
 {
     public class ContaPoupanca : Conta
     {
-        public ContaPoupanca(string nome, string cpf, decimal rendaMensal, AgenciaEnum agencia)
+        public ContaPoupanca(string nome, string cpf, decimal rendaMensal, Agencia agencia)
             : base(nome, cpf, rendaMensal, agencia)
         {
         }
 
-        public decimal SimularRendimento(decimal saldo, int meses, int rentabilidade)
+        public static decimal SimularRendimento(decimal saldo, int meses, int rentabilidade)
         {
+            
             decimal txMensal = ((decimal)Math.Pow(1 + ((double)rentabilidade/100), 1.0 / 12) - 1) * 100m;
             
             return saldo * (txMensal * meses/100);

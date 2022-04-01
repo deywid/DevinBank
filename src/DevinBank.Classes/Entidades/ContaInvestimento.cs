@@ -1,11 +1,12 @@
 ﻿using DevinBank.Library.Enums;
+using DevinBank.Library.Modelos;
 
 namespace DevinBank.Library
 {
     public class ContaInvestimento : Conta
     {
         public decimal ValorAplicado { get; private set; }
-        public ContaInvestimento(string nome, string cpf, decimal rendaMensal, AgenciaEnum agencia) 
+        public ContaInvestimento(string nome, string cpf, decimal rendaMensal, Agencia agencia) 
             : base(nome, cpf, rendaMensal, agencia)
         {
             ValorAplicado = 0.0m;
@@ -13,46 +14,41 @@ namespace DevinBank.Library
 
         public void Investimento(decimal montante, int meses, DateTime data, TipoInvestimento tipoInvestimento)
         {
-            if(montante <= Saldo)
-            {
-                Saldo -= montante;
-                
-                TipoTransacao tipo = new(TipoTransacaoEnum.Investimento);
-                SalvarTransacao(tipo, montante, data, meses, tipoInvestimento);
-                AtualizaValorAplicado(data);
-            }
-            else
-            {
-                throw new Exception("Saldo insuficiente.");
-            }
+            if (meses < tipoInvestimento.TempoResgate)
+                throw new Exception("A operação não atende ao requisito de tempo mínimo para este tipo de investimento.\n");
 
+            if (montante > Saldo)
+                throw new Exception("Saldo insuficiente.");
+            try
+            {
+                SalvarTransacao(new TipoTransacao(TipoTransacaoEnum.Investimento), montante, data, meses, tipoInvestimento);
+                AtualizaValorAplicado(data);
+                Saldo -= montante;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Operação cancelada. {ex.Message}");
+            }
         }
         public void SalvarTransacao(TipoTransacao tipo, decimal valor, DateTime data, int meses, TipoInvestimento tipoInvestimento)
         {
+            try
+            {
                 Transacoes.Add(new TransacaoInvestimento(tipo, valor, data, meses, tipoInvestimento));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Não foi possível salvar a transação. {ex.Message}");
+            }
         }
         public static decimal SimularRendimento(decimal saldo, int meses, TipoInvestimento tipoInvestimento)
         {
+            if (meses < tipoInvestimento.TempoResgate)
+                Console.WriteLine("Esta simulação não observa o tempo mínimo de resgate!");
+
             decimal txMensal = ((decimal)Math.Pow(1 + ((double)tipoInvestimento.Rentabilidade / 100), 1.0 / 12) - 1) * 100m;
             
             return saldo * (txMensal * meses / 100);
-        }
-        public override string ExtratoTransacoes()
-        {
-            string extrato = "Extrato das transações:\n";
-            foreach (var transacoes in Transacoes)
-            {
-                if(transacoes is TransacaoInvestimento tri)
-                {
-                    extrato += $"\nTransação: {tri.TipoTransacao.Nome}\nTipo Investimento: {tri.TipoInvestimento.Nome}" +
-                        $"\nValor investido: {tri.Valor:N2}\nValor liquido: {tri.ValorLiquido:N2}\nData do investimento: {tri.Data.ToString("d")}\nResgate a partir de: {tri.DataRetirada.ToString("d")}\nData fim: {tri.DataFinalInvestimento.ToString("d")}\n";
-                }
-                else
-                {
-                    extrato += $"\nTransação: {transacoes.TipoTransacao.Nome}\nValor: {transacoes.Valor:N2}\nData: {transacoes.Data.ToString("d")}\n";
-                }
-            }
-            return extrato;
         }
         public void AtualizaValorAplicado(DateTime data)
         {
