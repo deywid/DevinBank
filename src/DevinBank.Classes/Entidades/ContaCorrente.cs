@@ -5,7 +5,7 @@ namespace DevinBank.Library
 {
     public class ContaCorrente : Conta, IContaCorrente
     {
-        public decimal LimiteChequeEspecial { get; }
+        public decimal LimiteChequeEspecial { get; private set; }
         public ContaCorrente(string nome, string cpf, decimal rendaMensal, Agencia agencia)
             : base(nome, cpf, rendaMensal, agencia)
         {
@@ -14,14 +14,16 @@ namespace DevinBank.Library
 
         public override void Saque(decimal montante, DateTime data)
         {
-            if (montante <= Saldo + LimiteChequeEspecial)
-            {
-                Saldo -= montante;
-                SalvarTransacao(new TipoTransacao(TipoTransacaoEnum.Saque), montante, data);
-            }
-            else
-            {
+            if (montante > Saldo + LimiteChequeEspecial)
                 throw new Exception("Saldo insuficiente.");
+            try
+            {
+                SalvarTransacao(new TipoTransacao(TipoTransacaoEnum.Saque), montante, data);
+                Saldo -= montante;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Operação cancelada. {ex.Message}");
             }
         }
         public override void Transferencia(Conta contaBeneficiaria, decimal montante, DateTime data)
@@ -40,18 +42,35 @@ namespace DevinBank.Library
             }
             else
             {
-                Saldo -= montante;
-                contaBeneficiaria.Saldo += montante;
-
-                SalvarTransacao(new TipoTransacao(TipoTransacaoEnum.Transferencia), montante, data);
-                SalvarTransferencia(contaBeneficiaria, montante, data);
+                try
+                {
+                    SalvarTransacao(new TipoTransacao(TipoTransacaoEnum.Transferencia), montante, data);
+                    SalvarTransferencia(contaBeneficiaria, montante, data);
+                    Saldo -= montante;
+                    contaBeneficiaria.Saldo += montante;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Operação cancelada. {ex.Message}");
+                }
             }
 
         }
+        public override void AlterarCadastro(decimal rendaMensal)
+        {
+            try
+            {
+                base.AlterarCadastro(rendaMensal);
+                LimiteChequeEspecial = rendaMensal * 10 / 100;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
         public override string Extrato()
         {
-            return $"\nCliente: {Nome}\nCPF: {CPF}\nConta: {NumConta}\nAgência: {Agencia.Nome}\n\nSaldo em conta: R$ {Saldo:N2}\nLimite do cheque especial: R$ {LimiteChequeEspecial:N2}";
+            return $"\nCliente: {Nome}\nCPF: {CPF}\nNúmero da conta: {NumConta}\nAgência: {Agencia.Nome}\n\nSaldo em conta: R$ {Saldo:N2}\nLimite do cheque especial: R$ {LimiteChequeEspecial:N2}";
         }
-
     }
 }

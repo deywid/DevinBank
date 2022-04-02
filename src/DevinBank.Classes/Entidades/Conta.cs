@@ -11,7 +11,7 @@ namespace DevinBank.Library
         public decimal RendaMensal { get; private set; }
         public int NumConta { get; private set; }
         public Agencia Agencia { get; private set; }
-        public decimal Saldo { get; set; }
+        public decimal Saldo { get; protected internal set; }
         public IList<Transacao> Transacoes { get; private set; }
         public IList<Transferencia> Transferencias { get; private set; }
 
@@ -86,7 +86,7 @@ namespace DevinBank.Library
         }
         public virtual string Extrato()
         {
-            return $"\nCliente: {Nome}\nCPF: {CPF}\nConta: {NumConta}\nAgencia: {Agencia.Nome}\n\nSaldo em conta: R$ {Saldo:N2}";
+            return $"\nCliente: {Nome}\nCPF: {CPF}\nNúmero da conta: {NumConta}\nAgência: {Agencia.Nome}\n\nSaldo em conta: R$ {Saldo:N2}";
         }
         public void AlterarCadastro(string nome)
         {
@@ -99,7 +99,7 @@ namespace DevinBank.Library
                 throw new Exception($"Não foi possível salvar a alteração. {ex.Message}");
             }
         }
-        public void AlterarCadastro(decimal rendaMensal)
+        public virtual void AlterarCadastro(decimal rendaMensal)
         {
             try
             {
@@ -121,7 +121,7 @@ namespace DevinBank.Library
                 throw new Exception($"Não foi possível salvar a alteração. {ex.Message}");
             }
         }
-        public void SalvarTransferencia(IConta contaDestino, decimal valor, DateTime data)
+        public void SalvarTransferencia(Conta contaDestino, decimal valor, DateTime data)
         {
             try
             {
@@ -154,7 +154,7 @@ namespace DevinBank.Library
             {
                 foreach (var transferencia in Transferencias)
                 {
-                    historico += $"\nConta origem: {transferencia.ContaOrigem.NumConta}\nBeneficiario: {transferencia.ContaDestino.NumConta}\nValor: R$ {transferencia.Valor:N2}\nData: {transferencia.Data:d}\n";
+                    historico += $"\nConta origem: {transferencia.ContaOrigem.NumConta}\nBeneficiário: {transferencia.ContaDestino.NumConta}\nValor: R$ {transferencia.Valor:N2}\nData: {transferencia.Data:d}\n";
                 }
             }
             return historico;
@@ -167,14 +167,14 @@ namespace DevinBank.Library
             string extrato = "";
             foreach (var transacoes in Transacoes)
             {
-                if (transacoes is TransacaoInvestimento tri)
+                if (transacoes is TransacaoInvestimento transI)
                 {
-                    extrato += $"\nTransação: {tri.TipoTransacao.Nome}\nTipo Investimento: {tri.TipoInvestimento.Nome}" +
-                               $"\nValor investido: R$ {tri.Valor:N2}\nValor liquido: R$ {tri.ValorLiquido:N2}\nData do investimento: {tri.Data:d}\nResgate a partir de: {tri.DataRetirada:d}\nData fim: {tri.DataFinalInvestimento:d}\n";
+                    extrato += $"\nTransação: {transI.TipoTransacao.Nome}\nTipo Investimento: {transI.TipoInvestimento.Nome}" +
+                               $"\nValor investido: R$ {transI.Valor:N2}\nValor líquido: R$ {transI.ValorLiquido:N2}\nData do investimento: {transI.Data:d}\nResgate a partir de: {transI.DataRetirada:d}\nVencimento: {transI.DataFinalInvestimento:d}\n";
                 }
                 else
                 {
-                    extrato += $"\nTransação: {transacoes.TipoTransacao.Nome}\nValor: R${transacoes.Valor:N2}\nData: {transacoes.Data:d}\n";
+                    extrato += $"\nTransação: {transacoes.TipoTransacao.Nome}\nValor: R$ {transacoes.Valor:N2}\nData: {transacoes.Data:d}\n";
                 }
             }
             return extrato;

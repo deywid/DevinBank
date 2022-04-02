@@ -22,7 +22,7 @@ namespace DevinBank.Library
         void AlterarCadastro(decimal rendaMensal);
         void AlterarCadastro(Agencia agencia);
         string ExtratoTransacoes();
-        void SalvarTransferencia(IConta contaDestino, decimal valor, DateTime data);
+        void SalvarTransferencia(Conta contaDestino, decimal valor, DateTime data);
         string HistoricoTransferencias();
 
     }

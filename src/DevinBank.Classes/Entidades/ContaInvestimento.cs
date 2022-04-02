@@ -3,10 +3,10 @@ using DevinBank.Library.Modelos;
 
 namespace DevinBank.Library
 {
-    public class ContaInvestimento : Conta
+    public class ContaInvestimento : Conta, IContaInvestimento
     {
         public decimal ValorAplicado { get; private set; }
-        public ContaInvestimento(string nome, string cpf, decimal rendaMensal, Agencia agencia) 
+        public ContaInvestimento(string nome, string cpf, decimal rendaMensal, Agencia agencia)
             : base(nome, cpf, rendaMensal, agencia)
         {
             ValorAplicado = 0.0m;
@@ -47,7 +47,7 @@ namespace DevinBank.Library
                 Console.WriteLine("Esta simulação não observa o tempo mínimo de resgate!");
 
             decimal txMensal = ((decimal)Math.Pow(1 + ((double)tipoInvestimento.Rentabilidade / 100), 1.0 / 12) - 1) * 100m;
-            
+
             return saldo * (txMensal * meses / 100);
         }
         public void AtualizaValorAplicado(DateTime data)
@@ -55,7 +55,7 @@ namespace DevinBank.Library
             decimal aux_soma = 0.0m;
             IEnumerable<Transacao> query = Transacoes.Where(tr => tr is TransacaoInvestimento);
 
-            foreach(TransacaoInvestimento tr in query)
+            foreach (TransacaoInvestimento tr in query)
             {
                 int dias = (data - tr.Data).Days;
                 if (dias <= 0)
@@ -74,6 +74,9 @@ namespace DevinBank.Library
             ValorAplicado = aux_soma;
 
         }
-
+        public override string Extrato()
+        {
+            return $"\nCliente: {Nome}\nCPF: {CPF}\nNúmero da conta: {NumConta}\nAgência: {Agencia.Nome}\n\nSaldo em conta: R$ {Saldo:N2}\nTotal aplicado: R$ {ValorAplicado:N2}";
+        }
     }
 }

@@ -1,4 +1,6 @@
 ﻿
+using DevinBank.App.UI;
+
 namespace DevinBank.App
 {
     class Program
@@ -6,13 +8,9 @@ namespace DevinBank.App
         static void Main(string[] args)
         {
 
-            ConsolePatterns run = new();
-
-            //run.Logo();
-            run.MainMenu();
-
+            ConsoleUI App = new();
+            App.RunApp();
 
         }
     }
-
 }
