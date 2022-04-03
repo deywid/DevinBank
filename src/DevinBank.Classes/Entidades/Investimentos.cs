@@ -3,10 +3,10 @@ using DevinBank.Library.Modelos;
 
 namespace DevinBank.Library
 {
-    public class ContaInvestimento : Conta, IContaInvestimento
+    public class Investimentos : Conta, IContaInvestimento
     {
         public decimal ValorAplicado { get; private set; }
-        public ContaInvestimento(string nome, string cpf, decimal rendaMensal, Agencia agencia)
+        public Investimentos(string nome, string cpf, decimal rendaMensal, Agencia agencia)
             : base(nome, cpf, rendaMensal, agencia)
         {
             ValorAplicado = 0.0m;

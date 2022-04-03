@@ -17,17 +17,17 @@ namespace DevinBank.App.UI
             for (int i = 0; i < 4; i++)
             {
                 Console.Write(".");
-                Thread.Sleep(1100);
+                Thread.Sleep(900);
             }
 
         }
-        private static void LogOff(string texto)
+        private static void LogOff(string text)
         {
             Console.Clear();
-            for(int i = 0; i < texto.Length; i++)
+            for(int i = 0; i < text.Length; i++)
             {
-                Console.Write(texto[i]);
-                Thread.Sleep(new Random().Next(1,6)*100);
+                Console.Write(text[i]);
+                Thread.Sleep(new Random().Next(1,5)*100);
             }
             Thread.Sleep(2000);
         }
@@ -78,11 +78,11 @@ namespace DevinBank.App.UI
         {
             if (isLoggedin)
             {
-                Console.Title = "DEVin Bank" + $"        Cliente: {Conta!.Nome}        Conta: {Conta.NumConta}        Data: {Banco.Data:d}".ToUpper();
+                Console.Title = "DEVin Bank" + $"       Cliente: {Conta!.Nome}        Conta: {Conta.NumConta}        {Banco.Data:d}".ToUpper();
             }
             else
             {
-                Console.Title = "DEVin Bank";
+                Console.Title = $"DEVin Bank            {Banco.Data:d}";
             }
         }
     }

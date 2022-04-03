@@ -22,15 +22,15 @@ namespace DevinBank.App.UI
             {
                 if (tipoConta == "poupança")
                 {
-                    Banco.SalvarConta(new ContaPoupanca(nome, cpf, renda, new Agencia(agencia)));
+                    Banco.SalvarConta(new Poupanca(nome, cpf, renda, new Agencia(agencia)));
                 }
                 else if (tipoConta == "corrente")
                 {
-                    Banco.SalvarConta(new ContaCorrente(nome, cpf, renda, new Agencia(agencia)));
+                    Banco.SalvarConta(new Corrente(nome, cpf, renda, new Agencia(agencia)));
                 }
                 else
                 {
-                    Banco.SalvarConta(new ContaInvestimento(nome, cpf, renda, new Agencia(agencia)));
+                    Banco.SalvarConta(new Investimentos(nome, cpf, renda, new Agencia(agencia)));
                 }
 
                 Console.Clear();
@@ -80,7 +80,7 @@ namespace DevinBank.App.UI
             Console.Clear();
             try
             {
-                Banco.ListarContasSaldoNegativo();
+                Console.WriteLine(Banco.ListarContasSaldoNegativo());
             }
             catch (Exception ex)
             {
@@ -244,11 +244,11 @@ namespace DevinBank.App.UI
         private void FluxoMaisOpcoes()
         {
             Console.Clear();
-            if (Conta is ContaPoupanca)
+            if (Conta is Poupanca)
             {
                 MenuContaPoupanca();
             }
-            else if (Conta is ContaCorrente)
+            else if (Conta is Corrente)
             {
                 MenuContaCorrente();
             }
@@ -293,7 +293,7 @@ namespace DevinBank.App.UI
                     int tempo = Validacoes.ValidaInt("Informe a quantidade de tempo(em meses): ");
                     int rentab = Validacoes.ValidaInt("Informe a rentabilidade anual: ");
 
-                    decimal rend = ContaPoupanca.SimularRendimento(Conta.Saldo, tempo, rentab);
+                    decimal rend = Poupanca.SimularRendimento(Conta.Saldo, tempo, rentab);
                     Console.WriteLine($"Saldo ao final: R${rend + Conta.Saldo:N2}");
                     Console.WriteLine($"Rendimentos totais: R${rend:N2}");
                 }
@@ -325,7 +325,7 @@ namespace DevinBank.App.UI
             int tempo = Validacoes.ValidaInt("Informe a quantidade de tempo(em meses): ");
             try
             {
-                decimal rend = ContaInvestimento.SimularRendimento(montante, tempo, new TipoInvestimento(tipoInvest));
+                decimal rend = Investimentos.SimularRendimento(montante, tempo, new TipoInvestimento(tipoInvest));
                 Console.WriteLine($"Saldo ao final: R${rend + montante:N2}");
                 Console.WriteLine($"Rendimentos totais: R${rend:N2}");
             }
@@ -352,7 +352,7 @@ namespace DevinBank.App.UI
             int tempo = Validacoes.ValidaInt("Informe a quantidade de tempo(em meses): ");
             try
             {
-                if (Conta is ContaInvestimento conta)
+                if (Conta is Investimentos conta)
                     conta.Investimento(montante, tempo, Banco.Data, new TipoInvestimento(tipoInvest));
                 Console.WriteLine($"Investimento de R$ {montante:N2} em {TipoInvestimento.PegaNome(tipoInvest)} realizado com sucesso!");
             }
@@ -368,7 +368,7 @@ namespace DevinBank.App.UI
             Console.Clear();
             try
             {
-                if (Conta is ContaInvestimento conta)
+                if (Conta is Investimentos conta)
                     conta.Investimento(montante, tempo, Banco.Data, new TipoInvestimento(tipoInvest));
                 Console.WriteLine($"Investimento de R$ {montante:N2} em {TipoInvestimento.PegaNome(tipoInvest)} realizado com sucesso!");
             }

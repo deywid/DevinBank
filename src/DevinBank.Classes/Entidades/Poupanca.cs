@@ -2,9 +2,9 @@
 
 namespace DevinBank.Library
 {
-    public class ContaPoupanca : Conta
+    public class Poupanca : Conta
     {
-        public ContaPoupanca(string nome, string cpf, decimal rendaMensal, Agencia agencia)
+        public Poupanca(string nome, string cpf, decimal rendaMensal, Agencia agencia)
             : base(nome, cpf, rendaMensal, agencia)
         {
         }

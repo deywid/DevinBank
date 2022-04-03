@@ -3,10 +3,10 @@ using DevinBank.Library.Modelos;
 
 namespace DevinBank.Library
 {
-    public class ContaCorrente : Conta, IContaCorrente
+    public class Corrente : Conta, IContaCorrente
     {
         public decimal LimiteChequeEspecial { get; private set; }
-        public ContaCorrente(string nome, string cpf, decimal rendaMensal, Agencia agencia)
+        public Corrente(string nome, string cpf, decimal rendaMensal, Agencia agencia)
             : base(nome, cpf, rendaMensal, agencia)
         {
             LimiteChequeEspecial = rendaMensal * 10 / 100;
@@ -70,7 +70,7 @@ namespace DevinBank.Library
         }
         public override string Extrato()
         {
-            return $"\nCliente: {Nome}\nCPF: {CPF}\nNúmero da conta: {NumConta}\nAgência: {Agencia.Nome}\n\nSaldo em conta: R$ {Saldo:N2}\nLimite do cheque especial: R$ {LimiteChequeEspecial:N2}";
+            return $"\nCliente: {Nome}\nCPF: {CPF}\nNúmero da conta: {NumConta}\nAgência: {Agencia.Nome}\n\nSaldo em conta: R$ {Saldo:N2}\nLimite do cheque especial: R$ {LimiteChequeEspecial:N2}\n";
         }
     }
 }

@@ -86,7 +86,7 @@ namespace DevinBank.Library
         }
         public virtual string Extrato()
         {
-            return $"\nCliente: {Nome}\nCPF: {CPF}\nNúmero da conta: {NumConta}\nAgência: {Agencia.Nome}\n\nSaldo em conta: R$ {Saldo:N2}";
+            return $"\nCliente: {Nome}\nCPF: {CPF}\nNúmero da conta: {NumConta}\nAgência: {Agencia.Nome}\n\nSaldo em conta: R$ {Saldo:N2}\n";
         }
         public void AlterarCadastro(string nome)
         {

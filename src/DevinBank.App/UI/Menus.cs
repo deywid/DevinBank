@@ -327,9 +327,9 @@ namespace DevinBank.App.UI
             {
                 Console.Clear();
                 Console.WriteLine("Escolha o tipo de investimento: ");
-                Console.WriteLine($"[1] {TipoInvestimento.PegaNome(TipoInvestimentoEnum.LCI)} (resgate em {TipoInvestimento.PegaRentabilidade(TipoInvestimentoEnum.LCI)} meses) ");
-                Console.WriteLine($"[2] {TipoInvestimento.PegaNome(TipoInvestimentoEnum.LCA)} (resgate em {TipoInvestimento.PegaRentabilidade(TipoInvestimentoEnum.LCA)} meses) ");
-                Console.WriteLine($"[3] {TipoInvestimento.PegaNome(TipoInvestimentoEnum.CDB)} (resgate em {TipoInvestimento.PegaRentabilidade(TipoInvestimentoEnum.CDB)} meses) ");
+                Console.WriteLine($"[1] {TipoInvestimento.PegaNome(TipoInvestimentoEnum.LCI)} (resgate em {TipoInvestimento.PegaTempoResgate(TipoInvestimentoEnum.LCI)} meses) ");
+                Console.WriteLine($"[2] {TipoInvestimento.PegaNome(TipoInvestimentoEnum.LCA)} (resgate em {TipoInvestimento.PegaTempoResgate(TipoInvestimentoEnum.LCA)} meses) ");
+                Console.WriteLine($"[3] {TipoInvestimento.PegaNome(TipoInvestimentoEnum.CDB)} (resgate em {TipoInvestimento.PegaTempoResgate(TipoInvestimentoEnum.CDB)} meses) ");
                 string? opcao = Console.ReadLine();
 
                 switch (opcao)

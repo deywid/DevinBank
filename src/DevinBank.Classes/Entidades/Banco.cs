@@ -8,9 +8,9 @@ namespace DevinBank.Library
 
         public void AtualizaData(DateTime data)
         {
-            if(data < DateTime.Now)
+            if(data < DateTime.Now.Date)
             {
-                throw new Exception($"A data não pode ser anterior a {DateTime.Now:d}");
+                throw new Exception($"A data não pode ser anterior a {DateTime.Now:d}.");
             }
             else
             {
@@ -40,9 +40,9 @@ namespace DevinBank.Library
         }
         public void AtualizaContas()
         {
-            IEnumerable<Conta> query = Contas.Where(conta => conta is ContaInvestimento);
+            IEnumerable<Conta> query = Contas.Where(conta => conta is Investimentos);
             
-            foreach (ContaInvestimento conta in query)
+            foreach (Investimentos conta in query)
             {
                 conta.AtualizaValorAplicado(Data);
             }
@@ -53,13 +53,28 @@ namespace DevinBank.Library
             if (Contas.Count < 1)
                 throw new Exception("Nenhuma conta cadastrada.");
 
+            var query = Contas.GroupBy(
+                conta => conta.GetType(),
+                conta => conta.Extrato(),
+                (tipo, agrup) => new
+                {
+                    Key = tipo,
+                    G = agrup.ToList()
+                });
+
             string lista = "";
-            foreach (var conta in Contas)
+
+            foreach (var result in query)
             {
-                
-                lista += $"¨¨¨ ¨¨¨¨ ¨¨ ¨¨ ¨¨¨¨ ¨¨¨ ¨¨¨ ¨¨¨¨ ¨¨ ¨¨ ¨¨¨¨ ¨¨¨\n{conta.Extrato()}\n";
+                lista += $"\nContas tipo: {result.Key.Name}\n";
+                foreach(var extrato in result.G)
+                {
+                    lista += extrato;
+                }
+                lista += "\n#################################################\n";
             }
             return lista;
+
         }
         public string ListarContasSaldoNegativo()
         {
@@ -73,7 +88,7 @@ namespace DevinBank.Library
             string lista = "";
             foreach (var conta in query)
             {
-                lista += $"\n¨¨¨ ¨¨¨¨ ¨¨ ¨¨ ¨¨¨¨ ¨¨¨\n{conta.Extrato()}\n";
+                lista += $"{conta.Extrato()}\n¨¨¨ ¨¨¨¨ ¨¨ ¨¨ ¨¨¨¨ ¨¨¨ ¨¨¨ ¨¨¨¨ ¨¨ ¨¨ ¨¨¨¨ ¨¨¨\n";
             }
             return lista;
 
@@ -81,9 +96,9 @@ namespace DevinBank.Library
         public decimal TotalEmInvestimentos()
         {
             IEnumerable<Conta> query;
-            if (Contas.OfType<ContaInvestimento>().Any())
+            if (Contas.OfType<Investimentos>().Any())
             { 
-                query = Contas.Where(conta => conta is ContaInvestimento);
+                query = Contas.Where(conta => conta is Investimentos);
             }
             else
             {
@@ -91,13 +106,13 @@ namespace DevinBank.Library
             }
 
             decimal aux_soma = 0.0m;
-            foreach(ContaInvestimento conta in query)
+            foreach(Investimentos conta in query)
             {
                 aux_soma += conta.ValorAplicado;
             }
 
             if(aux_soma <=0)
-                throw new Exception("Nenhum investimento foi registrado até o momento");
+                throw new Exception("Nenhum investimento foi registrado até o momento.");
 
             return aux_soma;
         }
