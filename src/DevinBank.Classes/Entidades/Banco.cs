@@ -42,11 +42,14 @@ namespace DevinBank.Library
         {
             IEnumerable<Conta> query = Contas.Where(conta => conta is Investimentos);
             
+            if (!query.Any())
+                throw new Exception("Nenhuma conta necessitou atualizar seus valores.");
+
             foreach (Investimentos conta in query)
             {
                 conta.AtualizaValorAplicado(Data);
             }
-            
+
         }
         public string ListarContas()
         {
@@ -55,7 +58,7 @@ namespace DevinBank.Library
 
             var query = Contas.GroupBy(
                 conta => conta.GetType(),
-                conta => conta.Extrato(),
+                conta => $"\nNúmero da conta: {conta.NumConta}\nCliente: {conta.CPF}\nAgência: {conta.Agencia.Nome}\n",
                 (tipo, agrup) => new
                 {
                     Key = tipo,
@@ -67,9 +70,9 @@ namespace DevinBank.Library
             foreach (var result in query)
             {
                 lista += $"\nContas tipo: {result.Key.Name}\n";
-                foreach(var extrato in result.G)
+                foreach(var conta in result.G)
                 {
-                    lista += extrato;
+                    lista += conta;
                 }
                 lista += "\n#################################################\n";
             }

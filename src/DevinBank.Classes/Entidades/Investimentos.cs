@@ -44,7 +44,7 @@ namespace DevinBank.Library
         public static decimal SimularRendimento(decimal saldo, int meses, TipoInvestimento tipoInvestimento)
         {
             if (meses < tipoInvestimento.TempoResgate)
-                Console.WriteLine("Esta simulação não observa o tempo mínimo de resgate!");
+                Console.WriteLine("Esta simulação não observa o tempo mínimo de resgate!\n");
 
             decimal txMensal = ((decimal)Math.Pow(1 + ((double)tipoInvestimento.Rentabilidade / 100), 1.0 / 12) - 1) * 100m;
 
@@ -52,9 +52,12 @@ namespace DevinBank.Library
         }
         public void AtualizaValorAplicado(DateTime data)
         {
-            decimal aux_soma = 0.0m;
             IEnumerable<Transacao> query = Transacoes.Where(tr => tr is TransacaoInvestimento);
+            
+            if (!query.Any())
+                throw new Exception("Nenhuma aplicação precisou ser atualizada.");
 
+            decimal aux_soma = 0.0m;
             foreach (TransacaoInvestimento tr in query)
             {
                 int dias = (data - tr.Data).Days;
@@ -76,7 +79,7 @@ namespace DevinBank.Library
         }
         public override string Extrato()
         {
-            return $"\nCliente: {Nome}\nCPF: {CPF}\nNúmero da conta: {NumConta}\nAgência: {Agencia.Nome}\n\nSaldo em conta: R$ {Saldo:N2}\nTotal aplicado: R$ {ValorAplicado:N2}";
+            return $"\nCliente: {Nome}\nCPF: {CPF}\nNúmero da conta: {NumConta}\nAgência: {Agencia.Nome}\n\nSaldo em conta: R$ {Saldo:N2}\nTotal aplicado: R$ {ValorAplicado:N2}\n";
         }
     }
 }

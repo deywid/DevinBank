@@ -6,7 +6,7 @@ namespace DevinBank.Library
     public class TransacaoInvestimento : Transacao
     {
         public TipoInvestimento TipoInvestimento { get; }
-        public decimal ValorLiquido { get; set; }
+        public decimal ValorLiquido { get; protected internal set; }
         public DateTime DataRetirada { get; }
         public DateTime DataFinalInvestimento { get; }
         public TransacaoInvestimento(TipoTransacao tipo, decimal valor, DateTime data, int meses, TipoInvestimento tipoInvestimento)

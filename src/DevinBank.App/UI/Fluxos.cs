@@ -127,15 +127,29 @@ namespace DevinBank.App.UI
             try
             {
                 Banco.AtualizaData(new DateTime(ano, mes, dia));
-                Banco.AtualizaContas();
                 Console.WriteLine("A data foi atualizada com sucesso!");
             }
             catch (Exception ex)
             {
                 ErrorMsg(ex);
             }
+            UpdateTittle(false);
+            FluxoAtualizarContas();
             PressKey();
 
+        }
+        private void FluxoAtualizarContas()
+        {
+            try
+            {
+                Banco.AtualizaContas();
+                Console.WriteLine("\n\nO valor das aplicações também foi atualizado!");
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"\n\n{ex.Message}");
+            }
         }
         private void FluxoSaque()
         {
