@@ -34,7 +34,7 @@
 
 <!-- ABOUT THE PROJECT -->
 ### Sobre o projeto
-A proposta do projeto é aplicacar na prática os conceitos estudados durante o módulo de Back-End com C# do curso DEVinHouse. Esta é primeira atividade avaliativa dentre as exigidas no módulo.
+A proposta do projeto é aplicar na prática os conceitos estudados durante o módulo de Back-End com C# do curso DEVinHouse. Esta é primeira atividade avaliativa dentre as exigidas no módulo.
 
 ##### A aplicação deveria:
 - Ser desenvolvida em C#;
