@@ -127,14 +127,18 @@ namespace DevinBank.App.UI
             try
             {
                 Banco.AtualizaData(new DateTime(ano, mes, dia));
+                UpdateTittle(false);
                 Console.WriteLine("A data foi atualizada com sucesso!");
+                FluxoAtualizarContas();
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                Console.WriteLine("A data informada não possui um formato válido.");
             }
             catch (Exception ex)
             {
                 ErrorMsg(ex);
             }
-            UpdateTittle(false);
-            FluxoAtualizarContas();
             PressKey();
 
         }
