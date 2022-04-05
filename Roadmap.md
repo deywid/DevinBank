@@ -1,10 +1,10 @@
 ### Roadmap
 
-1. [] Implementar controle para os saldos em conta baseado na data do sistema e data das transações.
-> (O sistema precisa saber qual é o saldo disponível na data - controlar entradas e saídas)
+1. O sistema precisa saber qual Ã© o saldo disponÃ­vel na data - controlar entradas e saÃ­das.
+      - [ ] Implementar controle para os saldos em conta baseado na data do sistema e data das transaÃ§Ãµes.
 
-2. [] Implementar rendimentos para as contas do tipo poupança.
-> (Atualmente as contas poupança apenas informam os rendimentos durante simulação, enquanto o saque será o valor bruto aplicado)
+2. Atualmente as contas poupanÃ§a apenas informam os rendimentos durante simulaÃ§Ã£o, enquanto o saque serÃ¡ o valor bruto aplicado.
+      - [ ] Implementar rendimentos para as contas do tipo poupanÃ§a.
 
-3. [] Implementar resgate do valor aplicado para as contas do tipo investimentos.
-> (Atualmente as contas investimentos não oferecem a possibilidade de resgate das aplicações)
+3. Atualmente as contas investimentos nÃ£o oferecem a possibilidade de resgate das aplicaÃ§Ãµes.
+      - [ ] Implementar resgate do valor aplicado para as contas do tipo investimentos.
